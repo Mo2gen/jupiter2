@@ -1,10 +1,15 @@
+
+function startfun(){
+    getCoordinates()
+}
+
 function getCoordinates() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showcoordinates);
+        navigator.geolocation.getCurrentPosition(handlecoordinates);
     }
 }
 
-function showcoordinates(myposition) {
+function handlecoordinates(myposition) {
     console.log("Your Latitude is: " + myposition.coords.latitude)
     console.log("Your Longitude is: " + myposition.coords.longitude)
 }

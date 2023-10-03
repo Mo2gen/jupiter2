@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <title>Jupiter Weather</title>
     <link rel="stylesheet" href="{% static 'indexcss.css' %}">
-    <link rel="shortcut icon" href="{% static 'favicon.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <script src="{% static 'index.js' %}"></script>
 </head>
-<body>
+<body onload="startfun()">
     <div>Hier kommt ein Graph hin</div>
-    <button onclick="getCoordinates()">Standort ziehen</button>
 </body>
 </html>
