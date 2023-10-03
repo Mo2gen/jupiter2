@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <title>Jupiter Weather</title>
     <link rel="stylesheet" href="{% static 'indexcss.css' %}">
-    <link rel="shortcut icon" href="{% static 'favicon.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <script src="{% static 'index.js' %}"></script>
 </head>
-<body>
+<body onload="startfun()">
+<div id="header">
+    <div>Location, </div><div>meter</div>
+</div>
   <div id="container"></div>
     <script type="module">
     import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
@@ -59,6 +62,5 @@
     // Append the SVG element to the container
     container.append(svg.node());
     </script>
-    <button onclick="getCoordinates()">Standort ziehen</button>
 </body>
 </html>
