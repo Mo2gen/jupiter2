@@ -6,7 +6,7 @@ Fabio Di Grillo
 
 import requests
 
-
+# Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
 
 def get_forecast (apikey,lat_long):
