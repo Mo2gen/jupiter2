@@ -42,3 +42,4 @@ def save_forecast(forecast):
 
 
 print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+
