@@ -1,12 +1,11 @@
 var lat = 0;
 var long = 0;
-var city = "";
 
 async function startfun() {
   try {
     await getCoordinates();
-    const cityName = await getCityName(lat, long);
-    document.getElementById('location').innerHTML = cityName+",";
+    const city = await getCityName(lat, long);
+    document.getElementById('location').innerHTML = city+",";
   } catch (error) {
     console.error(error);
   }
