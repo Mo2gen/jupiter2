@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
+<header>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</header>
 <head>
     <meta charset="UTF-8">
     <title>Temperature Graph</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
     <div id="chart"></div>
+    <div id="tooltip" style="position: absolute; opacity: 0;"></div>
 
     <script>
-        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59}]
+        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59}];
 
         // Extract the minimum and maximum Temperature values
         const temperatureValues = data.map(d => d.Temperature);
@@ -59,7 +62,24 @@
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 2)
-            .attr("d", line);
+            .attr("d", line)
+            .on("mouseover", handleMouseOver)
+            .on("mouseout", handleMouseOut);
+
+        const tooltip = d3.select("#tooltip");
+
+        function handleMouseOver(event, d) {
+            const mousePos = d3.pointer(event, this);
+            const date = x.invert(mousePos[0])
+            const dateBisector = d3.bisector(d => d.normaltime).left
+            const bisectionIndex = dateBisector(data, date)
+            const hoveredIndexData = data[bisectionIndex - 1]
+            console.log(hoveredIndexData.Temperature);
+        }
+
+        function handleMouseOut() {
+
+        }
     </script>
 </body>
 </html>
