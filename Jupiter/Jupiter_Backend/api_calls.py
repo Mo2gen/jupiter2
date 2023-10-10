@@ -3,7 +3,7 @@ Fabio Di Grillo
 03.10.2023
 """
 
-from models import Request
+from .models import Request
 
 import datetime
 import time
