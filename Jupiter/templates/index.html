@@ -9,17 +9,7 @@
     <div id="chart"></div>
 
     <script>
-        const data = [{
-            'PK_timestamp': 1696926405.348035,
-            'timestamphour': 1696924800,
-            'normaltime': '2023-10-10 10:00:00',
-            'Temperature': 16.39
-        }, {
-            'PK_timestamp': 1696926405.348035,
-            'timestamphour': 1696928400,
-            'normaltime': '2023-10-10 11:00:00',
-            'Temperature': 18.52
-        }];
+        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59}]
 
         // Extract the minimum and maximum Temperature values
         const temperatureValues = data.map(d => d.Temperature);
@@ -37,8 +27,14 @@
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
+        const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+
+        data.forEach(d => {
+            d.normaltime = parseTime(d.normaltime);
+        });
+
         const x = d3.scaleTime()
-            .domain(data.map(d => new Date(d.normaltime)))
+            .domain(d3.extent(data, d => d.normaltime))
             .range([0, width]);
 
         const y = d3.scaleLinear()
@@ -46,12 +42,14 @@
             .range([height, 0]);
 
         const line = d3.line()
-            .x(d => x(new Date(d.normaltime)))
+            .x(d => x(d.normaltime))
             .y(d => y(d.Temperature));
 
         svg.append("g")
             .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x)
+                .ticks(d3.timeHour.every(1)) // Display hours at 1-hour intervals
+                .tickFormat(d3.timeFormat("%H:%M"))); // Format tick labels as "HH:MM"
 
         svg.append("g")
             .call(d3.axisLeft(y));
