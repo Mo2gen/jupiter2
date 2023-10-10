@@ -1,0 +1,15 @@
+#header{
+    width: 100%;
+    display: inline-grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+}
+#header > div{
+    margin-left: 5px;
+    display: inline-grid;
+}
+#location{
+    justify-self: right;
+}
+#currentTemp{
+    text-align: center;
+}
