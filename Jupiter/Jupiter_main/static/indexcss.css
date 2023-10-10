@@ -10,6 +10,9 @@
 #location{
     justify-self: right;
 }
+#height{
+    justify-self: left;
+}
 #currentTemp{
     text-align: center;
 }

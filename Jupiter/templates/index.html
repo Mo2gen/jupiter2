@@ -1,13 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-<header>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-</header>
 <head>
     <meta charset="UTF-8">
     <title>Temperature Graph</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" href="{% static 'indexcss.css' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <script src="{% static 'index.js' %}"></script>
 </head>
-<body>
+<body onload="startfun()">
+<div id="header">
+    <div id="location">Location, </div><div id="height">meter</div>
+</div>
+<div id="currentTemp"> {{ currentTemp }} °C</div>
     <div id="chart"></div>
     <div id="tooltip" style="position: absolute; opacity: 0;"></div>
 
