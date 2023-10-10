@@ -1,4 +1,3 @@
-
 function startfun(){
     getCoordinates()
 }
