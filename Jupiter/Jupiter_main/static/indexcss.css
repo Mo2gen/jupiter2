@@ -1,8 +1,15 @@
 #header{
-    display: flex;
     width: 100%;
-    justify-content: center;
+    display: inline-grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
 }
 #header > div{
     margin-left: 5px;
+    display: inline-grid;
+}
+#location{
+    justify-self: right;
+}
+#currentTemp{
+    text-align: center;
 }

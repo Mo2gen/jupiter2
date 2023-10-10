@@ -10,8 +10,9 @@
 </head>
 <body onload="startfun()">
 <div id="header">
-    <div>Location, </div><div>meter</div>
+    <div id="location">Location, </div><div id="height">meter</div>
 </div>
+<div id="currentTemp"> {{ currentTemp }} °C</div>
   <div id="container"></div>
     <script type="module">
     import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
