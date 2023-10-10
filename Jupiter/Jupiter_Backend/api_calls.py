@@ -2,10 +2,13 @@
 Fabio Di Grillo
 03.10.2023
 """
+
+from models import Request
+
 import datetime
 import time
-
 import requests
+
 
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
@@ -25,6 +28,12 @@ def save_forecast(forecast):
 
     """
 
+
+    t = Request(PK_Timestamp=time.time(),
+                normaltime =convert_timestamp_normaltime(time.time()),
+                CurrentTemperature = forecast["currently"]["temperature"]
+                )
+
     forecast_request = {
         "PK_timestamp": time.time(),
         "normaltime": convert_timestamp_normaltime(time.time()),
@@ -42,6 +51,11 @@ def save_forecast(forecast):
         }
         forcast_hours.append(forecast_hour)
 
+
+
+
+
+
     return forecast_request, forcast_hours
 
 
@@ -51,4 +65,10 @@ def convert_timestamp_normaltime(t):
     """
     return datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d %H:%M")
 
-print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+
+
+def test(r):
+    return "a"
+#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+
+
