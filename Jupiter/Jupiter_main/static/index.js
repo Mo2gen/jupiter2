@@ -64,13 +64,10 @@ async function getCityName(lat, lng) {
             var component = results[0].address_components[i];
             if (component.types.includes("locality")) {
               var cityName = component.long_name;
-              console.log("City Name: " + cityName);
               resolve(cityName);
               break; // Stop looping once the city name is found
             }
           }
-        } else {
-          reject("No results found");
         }
       } else {
         reject("Geocoder failed due to: " + status);
