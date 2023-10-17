@@ -9,9 +9,21 @@
 }
 #location{
     justify-self: right;
+    text-align: right;
+    border: 0;
 }
-#height{
+#location::placeholder{
+    color: black;
+    opacity: 1;
+}
+#change{
     justify-self: left;
+    margin-left: 5px;
+    padding: 0;
+    width: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
 }
 #currentTemp{
     text-align: center;

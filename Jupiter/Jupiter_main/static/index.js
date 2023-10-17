@@ -1,17 +1,22 @@
 var lat = 0;
 var long = 0;
-
+var city = ""
 async function startfun() {
+  document.getElementById('location').onkeydown = function(event) {
+  if (event.keyCode === 13) {
+    changeCity()
+  }
+}
   try {
-    await getCoordinates();
-    const city = await getCityName(lat, long);
-    document.getElementById('location').innerHTML = city+",";
+    await getCurrentCoords();
+    city = await getCityName(lat, long);
+    document.getElementById('location').setAttribute("placeholder", city);
   } catch (error) {
     console.error(error);
   }
 }
 
-function getCoordinates() {
+function getCurrentCoords() {
   return new Promise((resolve, reject) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -74,4 +79,9 @@ async function getCityName(lat, lng) {
       }
     });
   });
+}
+
+function changeCity(){
+  console.log(document.getElementById('location').value)
+  city=document.getElementById('location').value;
 }

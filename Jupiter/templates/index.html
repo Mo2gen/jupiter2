@@ -11,7 +11,8 @@
 </head>
 <body onload="startfun()">
 <div id="header">
-    <div id="location">Location, </div><div id="height">meter</div>
+    <input id="location" type="text" placeholder="Location">
+    <button id="change" type="submit" onclick="changeCity()">Change</button>
 </div>
 <div id="currentTemp"> {{ currentTemp }} °C</div>
     <div id="chart"></div>
