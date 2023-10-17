@@ -9,10 +9,10 @@
     <script src="{% static 'index.js' %}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApJ5QaTevQDcKAeHovgFJOeOurAPXGZxs&libraries=places"></script>
 </head>
-<body onload="startfun()">
+<body onload=startfun()>
 <div id="header">
     <input id="location" type="text" placeholder="Location">
-    <button id="change" type="submit" onclick="changeCity()">Change</button>
+    <button id="change" type="submit" onclick=changeCity()>Change</button>
 </div>
 <div id="currentTemp"> {{ currentTemp }} °C</div>
     <div id="chart"></div>
