@@ -3,7 +3,8 @@ var long = 0;
 var city = ""
 async function startfun() {
   document.getElementById('location').onkeydown = function(event) {
-  if (event.keyCode === 13) {
+    // keyCode wird nur von älteren Browsern benutzt, lang lebe die Backwards Compatibility
+  if (event.key === "Enter" || event.keyCode === 13) {
     changeCity()
   }
 }
