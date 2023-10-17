@@ -15,7 +15,7 @@
     <button id="change" type="submit" onclick=changeCity()>Change</button>
 </div>
 <div id="currentTemp"> {{ currentTemp }} °C</div>
-    <div id="chart"></div>
+    <div id="chart" style="padding-top: 50px"></div>
     <div id="tooltip" style="position: absolute; opacity: 0;"></div>
 
     <script>
@@ -28,7 +28,7 @@
 
         const margin = { top: 20, right: 30, bottom: 30, left: 40 };
         const width = window.innerWidth - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const height = 200 - margin.top - margin.bottom;
 
         const svg = d3.select("#chart")
             .append("svg")
@@ -49,22 +49,52 @@
 
         const y = d3.scaleLinear()
             .domain([minTemperature, maxTemperature])
-            .range([height, 0]);
+            .range([height, 25]);
 
         const line = d3.line()
             .x(d => x(d.normaltime))
             .y(d => y(d.Temperature));
+
+        svg.selectAll(".dot")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("class", "dot")
+            .attr("cx", d => x(d.normaltime))
+            .attr("cy", d => y(d.Temperature))
+            .attr("r", 4)
+            .style("fill", "steelblue");
+
+        svg.selectAll(".label")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("class", "label")
+            .attr("x", d => x(d.normaltime))
+            .attr("y", 15)
+            .text(d => `${d.Temperature}°C`)
+            .style("font-size", "12px")
+            .style("text-anchor", "middle")
+            .style("alignment-baseline", "bottom");
+
+        svg.selectAll(".time-label")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("class", "time-label")
+            .attr("x", d => x(d.normaltime))
+            .attr("y", 0) // Use maxY for consistent positioning
+            .text(d => d3.timeFormat("%H:%M")(d.normaltime)) // Display time in HH:MM format
+            .style("font-size", "12px")
+            .style("text-anchor", "middle")
+            .style("alignment-baseline", "bottom");
 
         svg.append("path")
             .datum(data)
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 2)
-            .attr("d", line)
-            .on("mouseover", handleMouseOver)
-            .on("mouseout", handleMouseOut);
-
-        const tooltip = d3.select("#tooltip");
+            .attr("d", line);
 
         function handleMouseOver(event, d) {
             const mousePos = d3.pointer(event, this);
