@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Temperature Graph</title>
+    <title>Jupiter</title>
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <link rel="stylesheet" href="{% static 'indexcss.css' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
@@ -27,7 +27,7 @@
         const maxTemperature = d3.max(temperatureValues);
 
         const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-        const width = 600 - margin.left - margin.right;
+        const width = window.innerWidth - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
         const svg = d3.select("#chart")
