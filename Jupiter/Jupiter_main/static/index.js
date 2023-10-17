@@ -83,6 +83,8 @@ async function getCityName(lat, lng) {
 }
 
 function changeCity(){
-  console.log(document.getElementById('location').value)
-  city=document.getElementById('location').value;
+  if (document.getElementById('location').value!== ""){
+    city=document.getElementById('location').value;
+  }
+  console.log(city)
 }
