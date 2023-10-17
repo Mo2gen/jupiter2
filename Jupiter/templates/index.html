@@ -15,7 +15,7 @@
     <button id="change" type="submit" onclick=changeCity()><img src="{% static 'lupe.png' %}" width="18px" height="18px"></button>
 </div>
 <div id="currentTemp"> {{ currentTemp }} °C</div>
-    <div id="chart" style="padding-top: 50px"></div>
+    <div id="chart"></div>
     <div id="tooltip" style="position: absolute; opacity: 0;"></div>
 
     <script>
@@ -95,19 +95,6 @@
             .attr("stroke", "steelblue")
             .attr("stroke-width", 2)
             .attr("d", line);
-
-        function handleMouseOver(event, d) {
-            const mousePos = d3.pointer(event, this);
-            const date = x.invert(mousePos[0])
-            const dateBisector = d3.bisector(d => d.normaltime).left
-            const bisectionIndex = dateBisector(data, date)
-            const hoveredIndexData = data[bisectionIndex - 1]
-            console.log(hoveredIndexData.Temperature);
-        }
-
-        function handleMouseOut() {
-
-        }
     </script>
 </body>
 </html>
