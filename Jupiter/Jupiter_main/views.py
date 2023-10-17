@@ -1,5 +1,4 @@
 import random
-
 from django.shortcuts import render
 from Jupiter_Backend import api_calls
 
