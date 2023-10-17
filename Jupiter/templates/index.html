@@ -9,7 +9,7 @@
     <script src="{% static 'index.js' %}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApJ5QaTevQDcKAeHovgFJOeOurAPXGZxs&libraries=places"></script>
 </head>
-<body onload="startfun()">
+<body onload=startfun()>
 <div id="header">
     <input id="location" type="text" placeholder="Location">
     <button id="change" type="submit" onclick="changeCity()">Change</button>
@@ -54,15 +54,6 @@
         const line = d3.line()
             .x(d => x(d.normaltime))
             .y(d => y(d.Temperature));
-
-        svg.append("g")
-            .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(x)
-                .ticks(d3.timeHour.every(1)) // Display hours at 1-hour intervals
-                .tickFormat(d3.timeFormat("%H:%M"))); // Format tick labels as "HH:MM"
-
-        svg.append("g")
-            .call(d3.axisLeft(y));
 
         svg.append("path")
             .datum(data)
