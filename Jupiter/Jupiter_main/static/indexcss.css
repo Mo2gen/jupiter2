@@ -1,3 +1,4 @@
+{% load static %}
 #header{
     width: 100%;
     display: inline-grid;
@@ -16,14 +17,16 @@
     color: black;
     opacity: 1;
 }
-#change{
+#change {
+    align-items: center;
+    justify-content: center;
     justify-self: left;
     margin-left: 5px;
     padding: 0;
-    width: 50px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
+    border: none;
+    background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
 }
 #currentTemp{
     text-align: center;
