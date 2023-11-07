@@ -1,8 +1,3 @@
-"""
-Fabio Di Grillo
-03.10.2023
-"""
-
 # from .models import Forecast_Request
 
 import datetime
@@ -25,9 +20,6 @@ def get_forecast_json(apikey, lat, long):
 
 def save_forecast(forecast):
     """
-
-
-
     t = Request(PK_Timestamp=time.time(),
                 normaltime =convert_timestamp_normaltime(time.time()),
                 CurrentTemperature = forecast["currently"]["temperature"]
@@ -52,16 +44,11 @@ def save_forecast(forecast):
             "Temperature": h["temperature"]
         }
         forcast_hours.append(forecast_hour)
-
-        requests.post("http://127.0.0.1:6960/api/Forecast_Request/", json=requests)
-
+        requests.post("http://127.0.0.1:8000/api/Forecast_Request/", json=forecast_request)
     return forecast_request, forcast_hours
 
 
 def convert_timestamp_normaltime(t):
-    """
-
-    """
     return datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d %H:%M")
 
 
