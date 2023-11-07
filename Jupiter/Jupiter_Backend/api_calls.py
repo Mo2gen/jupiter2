@@ -3,15 +3,15 @@ Fabio Di Grillo
 03.10.2023
 """
 
-#from .models import Forecast_Request
+# from .models import Forecast_Request
 
 import datetime
 import time
 import requests
 
-
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
+
 
 def get_forecast_json(apikey, lat, long):
     """
@@ -65,13 +65,11 @@ def convert_timestamp_normaltime(t):
     return datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d %H:%M")
 
 
-
 def getandsave():
-    save_forecast(get_forecast_json(apiKey,41.210033,16.363449,))
+    save_forecast(get_forecast_json(apiKey, 41.210033, 16.363449, ))
+
 
 print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
 
-
 url = "localhost"
 requests.post(f'{url}api/request/', json=data)
-
