@@ -3,7 +3,7 @@ Fabio Di Grillo
 03.10.2023
 """
 
-from .models import Request
+#from .models import Forecast_Request
 
 import datetime
 import time
@@ -26,13 +26,15 @@ def get_forecast_json(apikey, lat, long):
 def save_forecast(forecast):
     """
 
-    """
 
 
     t = Request(PK_Timestamp=time.time(),
                 normaltime =convert_timestamp_normaltime(time.time()),
                 CurrentTemperature = forecast["currently"]["temperature"]
                 )
+
+    t.save()
+    """
 
     forecast_request = {
         "PK_timestamp": time.time(),
@@ -67,8 +69,9 @@ def convert_timestamp_normaltime(t):
 
 
 
-def test(r):
-    return "a"
+def getandsave():
+    save_forecast(get_forecast_json(apiKey,41.210033,16.363449,))
+
 #print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
 
 

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-_l(q#_4+2$*u(ax)b5xezzprbz#1nu_@&)x@7okwbg#8@wrg2r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -77,9 +77,17 @@ WSGI_APPLICATION = 'Jupiter.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "Jupiter",
+        'USER': "root",
+        'PASSWORD' : '',
+        'HOST' : 'localhost',
+        'PORT' : '3306',
+        'OPTIONS': {
+            'sql_mode' : 'traditional'
+        }
     }
+
 }
 
 
