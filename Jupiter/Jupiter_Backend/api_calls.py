@@ -55,6 +55,10 @@ def save_forecast(forecast):
 
 
 
+        requests.post("http://127.0.0.1:6960/api/Forecast_Request/",json=requests)
+
+
+
 
 
 
@@ -72,6 +76,9 @@ def convert_timestamp_normaltime(t):
 def getandsave():
     save_forecast(get_forecast_json(apiKey,41.210033,16.363449,))
 
-#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
 
+
+url = "localhost"
+requests.post(f'{url}api/request/', json=data)
 
