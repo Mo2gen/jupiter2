@@ -53,14 +53,7 @@ def save_forecast(forecast):
         }
         forcast_hours.append(forecast_hour)
 
-
-
-        requests.post("http://127.0.0.1:6960/api/Forecast_Request/",json=requests)
-
-
-
-
-
+        requests.post("http://127.0.0.1:6960/api/Forecast_Request/", json=requests)
 
     return forecast_request, forcast_hours
 
