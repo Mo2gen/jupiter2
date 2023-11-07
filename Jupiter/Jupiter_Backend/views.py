@@ -1,12 +1,10 @@
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import ForecastHour, Forecast_Request
 from .serializer import ForecastHourSerializer, Forecast_RequestSerializer
 
-@csrf_exempt
 class ForecastHourViewSet(viewsets.ModelViewSet):
     queryset = ForecastHour.objects.all()
     serializer_class = ForecastHourSerializer
@@ -25,7 +23,7 @@ class ForecastHourViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED if is_many else status.HTTP_200_OK)
 
-@csrf_exempt
+
 class Forecast_RequestViewSet(viewsets.ModelViewSet):
     queryset = Forecast_Request.objects.all()
     serializer_class = Forecast_RequestSerializer

@@ -19,15 +19,6 @@ def get_forecast_json(apikey, lat, long):
 
 
 def save_forecast(forecast):
-    """
-    t = Request(PK_Timestamp=time.time(),
-                normaltime =convert_timestamp_normaltime(time.time()),
-                CurrentTemperature = forecast["currently"]["temperature"]
-                )
-
-    t.save()
-    """
-
     forecast_request = {
         "PK_timestamp": time.time(),
         "normaltime": convert_timestamp_normaltime(time.time()),
@@ -44,7 +35,7 @@ def save_forecast(forecast):
             "Temperature": h["temperature"]
         }
         forcast_hours.append(forecast_hour)
-        requests.post("http://127.0.0.1:8000/api/Forecast_Request/", json=forecast_request)
+        #requests.post("http://127.0.0.1:8000/api/Forecast_Request/", json=forecast_request)
     return forecast_request, forcast_hours
 
 
@@ -57,6 +48,3 @@ def getandsave():
 
 
 print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
-
-url = "localhost"
-requests.post(f'{url}api/request/', json=data)
