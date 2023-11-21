@@ -1,33 +1,3 @@
-{% load static %}
-#header{
-    width: 100%;
-    display: inline-grid;
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-}
-#header > div{
-    margin-left: 5px;
-    display: inline-grid;
-}
-#location{
-    justify-self: right;
-    text-align: right;
-    border: 0;
-}
-#location::placeholder{
-    color: black;
-    opacity: 1;
-}
-#change {
-    align-items: center;
-    justify-content: center;
-    justify-self: left;
-    margin-left: 5px;
-    padding: 0;
-    border: none;
-    background-color: white;
-    border-radius: 50%;
-    cursor: pointer;
-}
-#currentTemp{
-    text-align: center;
+* {
+    font-family: Arial, sans-serif;
 }

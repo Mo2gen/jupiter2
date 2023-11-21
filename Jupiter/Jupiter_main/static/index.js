@@ -13,6 +13,7 @@ async function startfun() {
   try {
     await getCurrentCoords();
     city = await getCityName(lat, long);
+
     document.getElementById('location').setAttribute("placeholder", city);
   } catch (error) {
     console.error(error);
