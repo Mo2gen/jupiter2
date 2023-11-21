@@ -19,17 +19,14 @@
 </div>
 <div id="currentTemp"> {{ currentTemp }} °C</div>
     <div id="chart"></div>
-    <div>
-        <i class="wi wi-day-sunny"></i>
-    </div>
     <script>
-        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39, 'weather': 'wi-day-sunny'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52, 'weather': 'wi-day-cloudy'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4, 'weather': 'wi-day-rain'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64, 'weather': 'wi-day-snow'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47, 'weather': 'wi-hot'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29, 'weather': 'wi-day-thunderstorm'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16, 'weather': 'wi-day-haze'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34, 'weather': 'wi-night-alt-cloudy'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28, 'weather': 'wi-day-fog'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26, 'weather': 'wi-day-showers'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59, 'weather': 'wi-day-lightning'}];
+        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59, 'weather': ''}];
 
         const temperatureValues = data.map(d => d.Temperature);
         const minTemperature = d3.min(temperatureValues);
         const maxTemperature = d3.max(temperatureValues);
 
-        const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+        const margin = { top: 40, right: 30, bottom: 30, left: 40 };
         const width = window.innerWidth - margin.left - margin.right;
         const height = 200 - margin.top - margin.bottom;
 
@@ -74,7 +71,7 @@
             .append("text")
             .attr("class", "label")
             .attr("x", d => x(d.normaltime))
-            .attr("y", 15)
+            .attr("y", -10)
             .text(d => `${d.Temperature}°C`)
             .style("font-size", "12px")
             .style("text-anchor", "middle")
@@ -86,7 +83,7 @@
             .append("text")
             .attr("class", "time-label")
             .attr("x", d => x(d.normaltime))
-            .attr("y", 30)
+            .attr("y", -25)
             .text(d => d3.timeFormat("%H:%M")(d.normaltime))
             .style("font-size", "12px")
             .style("text-anchor", "middle")
@@ -98,9 +95,10 @@
             .append("text")
             .attr("class", "icon-label")
             .attr("x", d => x(d.normaltime))
-            .attr("y", 0)
-            .text(d => `<i class="${d.weather}"></i>`)
-            .style("font-size", "12px")
+            .attr("y", 10)
+            .text(d => d.weather)
+            .style("font-family", "weathericons")
+            .style("font-size", "18px")
             .style("text-anchor", "middle")
             .style("alignment-baseline", "bottom");
 
