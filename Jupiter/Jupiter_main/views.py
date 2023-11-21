@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from Jupiter_Backend import api_calls
 from datetime import datetime
 
 def index(request):
