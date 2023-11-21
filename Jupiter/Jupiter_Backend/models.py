@@ -11,7 +11,7 @@ from django.db import models
 class ForecastHour(models.Model):
     pk_forecast_hour_id = models.AutoField(db_column='PK_forecast_hour_ID', primary_key=True)  # Field name made lowercase.
     fk_timestamp = models.ForeignKey('Forecast_Request', models.DO_NOTHING, db_column='FK_timestamp', blank=True, null=True)  # Field name made lowercase.
-    timestamphour = models.IntegerField(blank=True, null=True)
+    timestamphour = models.IntegerField(db_column='timestamphour')
     temperature = models.IntegerField(db_column='Temperature')  # Field name made lowercase.
 
     class Meta:
