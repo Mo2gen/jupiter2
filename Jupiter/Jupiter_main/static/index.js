@@ -13,7 +13,7 @@ async function startfun() {
   try {
     await getCurrentCoords();
     city = await getCityName(lat, long);
-
+    console.log(readCookies())
     document.getElementById('location').setAttribute("placeholder", city);
   } catch (error) {
     console.error(error);
@@ -83,6 +83,32 @@ async function getCityName(lat, lng) {
       }
     });
   });
+}
+
+function readCookies() {
+    var cookies = document.cookie.split('; ');
+
+    var lang, lat, date;
+
+    cookies.forEach(function(cookie) {
+        var parts = cookie.split('=');
+        var name = parts[0];
+        var value = parts[1];
+
+        if (name === 'lang') {
+            lang = parseFloat(value);  // Assuming lang is a floating-point number
+        } else if (name === 'lat') {
+            lat = parseFloat(value);   // Assuming lat is a floating-point number
+        } else if (name === 'date') {
+            date = value;  // Assuming date is a string
+        }
+    });
+
+    return {
+        lang: lang,
+        lat: lat,
+        date: date
+    };
 }
 
 function changeCity(){

@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from datetime import datetime
 
+
 def index(request):
+    print(request.COOKIES.get('lang'))
+    print(request.COOKIES.get('lat'))
+    print(request.COOKIES.get('date'))
     context = {
         "currentTemp": 8,
         "wind": 0,
@@ -13,4 +17,5 @@ def index(request):
         "weather": 'clear',
         "date": datetime.now().strftime('%A %H:%M')
     }
-    return render(request, 'test.html', context)
+    response = render(request, 'test.html', context)
+    return response
