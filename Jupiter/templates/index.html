@@ -5,6 +5,9 @@
     <title>Jupiter</title>
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <link rel="stylesheet" href="{% static 'indexcss.css' %}">
+    <link rel="stylehseet" href="{% static 'css/cweather-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/weather-icons.min.css' %}">
+
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <script src="{% static 'index.js' %}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApJ5QaTevQDcKAeHovgFJOeOurAPXGZxs&libraries=places"></script>
@@ -16,12 +19,12 @@
 </div>
 <div id="currentTemp"> {{ currentTemp }} °C</div>
     <div id="chart"></div>
-    <div id="tooltip" style="position: absolute; opacity: 0;"></div>
-
+    <div>
+        <i class="wi wi-day-sunny"></i>
+    </div>
     <script>
-        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59}];
+        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39, 'weather': 'wi-day-sunny'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52, 'weather': 'wi-day-cloudy'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4, 'weather': 'wi-day-rain'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64, 'weather': 'wi-day-snow'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47, 'weather': 'wi-hot'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29, 'weather': 'wi-day-thunderstorm'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16, 'weather': 'wi-day-haze'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34, 'weather': 'wi-night-alt-cloudy'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28, 'weather': 'wi-day-fog'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26, 'weather': 'wi-day-showers'}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59, 'weather': 'wi-day-lightning'}];
 
-        // Extract the minimum and maximum Temperature values
         const temperatureValues = data.map(d => d.Temperature);
         const minTemperature = d3.min(temperatureValues);
         const maxTemperature = d3.max(temperatureValues);
@@ -83,8 +86,20 @@
             .append("text")
             .attr("class", "time-label")
             .attr("x", d => x(d.normaltime))
-            .attr("y", 0) // Use maxY for consistent positioning
-            .text(d => d3.timeFormat("%H:%M")(d.normaltime)) // Display time in HH:MM format
+            .attr("y", 30)
+            .text(d => d3.timeFormat("%H:%M")(d.normaltime))
+            .style("font-size", "12px")
+            .style("text-anchor", "middle")
+            .style("alignment-baseline", "bottom");
+
+        svg.selectAll(".icon-label")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("class", "icon-label")
+            .attr("x", d => x(d.normaltime))
+            .attr("y", 0)
+            .text(d => `<i class="${d.weather}"></i>`)
             .style("font-size", "12px")
             .style("text-anchor", "middle")
             .style("alignment-baseline", "bottom");
