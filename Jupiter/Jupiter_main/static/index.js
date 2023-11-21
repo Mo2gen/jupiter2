@@ -4,10 +4,12 @@ var city = ""
 async function startfun() {
   document.getElementById('location').onkeydown = function(event) {
     // keyCode wird nur von älteren Browsern benutzt, lang lebe die Backwards Compatibility
-  if (event.key === "Enter" || event.keyCode === 13) {
-    changeCity()
+    if (event.key === "Enter" || event.keyCode === 13) {
+      changeCity();
+      getCityCoords(city);
+    }
   }
-}
+  // Such nach derzeitiger Stadt
   try {
     await getCurrentCoords();
     city = await getCityName(lat, long);
@@ -85,6 +87,7 @@ async function getCityName(lat, lng) {
 function changeCity(){
   if (document.getElementById('location').value!== ""){
     city=document.getElementById('location').value;
+    document.getElementById('location').setAttribute("placeholder", city);
   }
   console.log(city)
 }
