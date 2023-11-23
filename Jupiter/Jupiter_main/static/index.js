@@ -1,24 +1,25 @@
 var lat = 0;
 var long = 0;
 var city = ""
+var date = ""
 async function startfun() {
-  document.getElementById('location').onkeydown = function(event) {
-    // keyCode wird nur von älteren Browsern benutzt, lang lebe die Backwards Compatibility
-    if (event.key === "Enter" || event.keyCode === 13) {
-      changeCity();
-      getCityCoords(city);
+    document.getElementById('location').onkeydown = function (event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            changeCity();
+            getCityCoords(city);
+        }
     }
-  }
-  // Such nach derzeitiger Stadt
-  try {
-    await getCurrentCoords();
-    city = await getCityName(lat, long);
-    console.log(readCookies())
-    document.getElementById('location').setAttribute("placeholder", city);
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+        await getCurrentCoords();
+        city = await getCityName(lat, long);
+        await setCookie(lat, long, Date());  // Ensure this is called after reading cookies
+        lat, long, date = readCookies();
+        document.getElementById('location').setAttribute("placeholder", city);
+    } catch (error) {
+        console.error(error);
+    }
 }
+
 
 function getCurrentCoords() {
   return new Promise((resolve, reject) => {
@@ -47,8 +48,6 @@ function getCityCoords(cityName) {
       if (status === "OK") {
         if (results[0]) {
           var location = results[0].geometry.location;
-          console.log("Latitude: " + location.lat());
-          console.log("Longitude: " + location.lng());
           resolve();
         } else {
           reject("No results found");
@@ -85,36 +84,41 @@ async function getCityName(lat, lng) {
   });
 }
 
+function changeCity(){
+  if (document.getElementById('location').value!== ""){
+    city=document.getElementById('location').value;
+    document.getElementById('location').setAttribute("placeholder", city);
+  }
+}
+
 function readCookies() {
     var cookies = document.cookie.split('; ');
 
-    var lang, lat, date;
+    var long, lat, date;
 
     cookies.forEach(function(cookie) {
         var parts = cookie.split('=');
         var name = parts[0];
         var value = parts[1];
 
-        if (name === 'lang') {
-            lang = parseFloat(value);  // Assuming lang is a floating-point number
-        } else if (name === 'lat') {
+        if (name == 'long') {
+            long = parseFloat(value);  // Assuming long is a floating-point number
+        } else if (name == 'lat') {
             lat = parseFloat(value);   // Assuming lat is a floating-point number
-        } else if (name === 'date') {
+        } else if (name == 'date') {
             date = value;  // Assuming date is a string
         }
     });
 
     return {
-        lang: lang,
+        long: long,
         lat: lat,
         date: date
     };
 }
 
-function changeCity(){
-  if (document.getElementById('location').value!== ""){
-    city=document.getElementById('location').value;
-    document.getElementById('location').setAttribute("placeholder", city);
-  }
-  console.log(city)
+function setCookie(lat, long, date) {
+    document.cookie = "lat=" + lat;
+    document.cookie = "long=" + long;
+    document.cookie = "date=" + date;
 }
