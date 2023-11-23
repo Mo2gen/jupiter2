@@ -1,9 +1,18 @@
 from django.shortcuts import render
 from datetime import datetime
-
+icons = {
+    'clear': '',
+    'cloudy': '',
+    'rain': '',
+    'thunderstorm': '',
+    'foggy': '',
+    'windy': '',
+    'snowing': '',
+    'solar-eclipse': ''
+}
 
 def index(request):
-    print(request.COOKIES.get('lang'))
+    print(request.COOKIES.get('long'))
     print(request.COOKIES.get('lat'))
     print(request.COOKIES.get('date'))
     context = {
@@ -14,7 +23,7 @@ def index(request):
         "pressure": 0,
         "min": 0,
         "max": 0,
-        "weather": 'clear',
+        "weather": icons['clear'],
         "date": datetime.now().strftime('%A %H:%M')
     }
     response = render(request, 'test.html', context)
