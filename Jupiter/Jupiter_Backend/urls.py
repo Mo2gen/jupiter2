@@ -4,7 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'Forecast', views.ForecastHourViewSet)
-router.register(r'Forecast_Request', views.Forecast_RequestViewSet)
+router.register(r'Forecast_Request', views.ForecastRequestViewSet)
 
 urlpatterns = [
     path('', include(router.urls))

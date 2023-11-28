@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import ForecastHour, Forecast_Request
-from .serializer import ForecastHourSerializer, Forecast_RequestSerializer
+from .models import ForecastHour, ForecastRequest
+from .serializer import ForecastHourSerializer, ForecastRequestSerializer
 
 class ForecastHourViewSet(viewsets.ModelViewSet):
     queryset = ForecastHour.objects.all()
@@ -24,9 +24,9 @@ class ForecastHourViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED if is_many else status.HTTP_200_OK)
 
 
-class Forecast_RequestViewSet(viewsets.ModelViewSet):
-    queryset = Forecast_Request.objects.all()
-    serializer_class = Forecast_RequestSerializer
+class ForecastRequestViewSet(viewsets.ModelViewSet):
+    queryset = ForecastRequest.objects.all()
+    serializer_class = ForecastRequestSerializer
 
     def create(self, request, *args, **kwargs):
         # Check if the request data is a list (multiple objects) or a single object

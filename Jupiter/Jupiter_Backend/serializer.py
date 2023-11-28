@@ -1,14 +1,14 @@
 from rest_framework import serializers
-from .models import ForecastHour, Forecast_Request
+from .models import ForecastHour, ForecastRequest
 
 class ForecastHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = ForecastHour
-        fields = ['pk_forecast_hour_id','fk_timestamp','timestamphour',"temperature"]
+        fields = ['pk_forecast_hour_id', 'fk_timestamp', 'timestamphour', 'temperature_cur', 'temperature_min', 'temperature_max', 'humidity', 'windspeed', 'uvindex', 'airpressure', 'weathersummary', 'normaltime']
 
 
-class Forecast_RequestSerializer(serializers.ModelSerializer):
+class ForecastRequestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Forecast_Request
+        model = ForecastRequest
         fields = ["pk_timestamp","currenttemperature"]
 
