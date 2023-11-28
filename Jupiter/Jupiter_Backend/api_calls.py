@@ -37,7 +37,13 @@ def save_forecast(forecast):
 
     forcast_hours = []
 
+    c = 0
+
     for h in forecast["hourly"]["data"]:
+        c += 1
+        if c > 24:
+            break
+
         forecast_hour = {
             "fk_timestamp" : t,
             "timestamphour" : int(h["time"]),
