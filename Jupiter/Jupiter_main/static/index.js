@@ -12,7 +12,7 @@ async function startfun() {
     try {
         await getCurrentCoords();
         city = await getCityName(lat, long);
-        await setCookie(lat, long, Date());  // Ensure this is called after reading cookies
+        await setCookie(lat, long);  // Ensure this is called after reading cookies
         lat, long, date = readCookies();
         document.getElementById('location').setAttribute("placeholder", city);
     } catch (error) {
@@ -117,8 +117,15 @@ function readCookies() {
     };
 }
 
-function setCookie(lat, long, date) {
+function setCookie(lat, long) {
     document.cookie = "lat=" + lat;
     document.cookie = "long=" + long;
-    document.cookie = "date=" + date;
+    if(document.getElementById('date').value !== ''){
+        console.log('AAAAAAAAA')
+        document.cookie = "date=" + document.getElementById('date').value
+    }
+    else{
+        console.log('BBBBBBBBBBBBBB')
+        document.cookie = "date=" + new Date().toISOString().split('T')[0];
+    }
 }
