@@ -10,5 +10,5 @@ class ForecastHourSerializer(serializers.ModelSerializer):
 class ForecastRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ForecastRequest
-        fields = ["pk_timestamp","currenttemperature"]
+        fields = ["pk_timestamp", 'latitude', 'longitude', "currenttemperature"]
 

@@ -8,7 +8,7 @@ import requests
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://localhost:9000"
+server = "http://localhost:8000"
 
 # michal hallo
 

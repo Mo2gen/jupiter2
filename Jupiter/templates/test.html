@@ -22,38 +22,40 @@
                         <div class="flex-row ms-2 mt-2">
                             <div>
                                 <input id="location" type="text" placeholder="Location" height="10px">
-                                <button id="change" type="submit" onclick=changeCity()><img src="{% static 'lupe.png' %}" width="15px" height="15px"></button>
+                                <button class="rounded-circle" id="change" type="submit" onclick=changeCity()><img src="{% static 'lupe.png' %}" width="15px" height="15px"></button>
                             </div>
                             <div class="row">
-                                <div class="col-2"> {{ currentTemp }}°C</div>
-                                <div class="col weather">{{ weather }}</div>
+                                <div class="col-2"> <h1>{{ currentTemp }}°C</h1></div>
+                                <div class="col weather" style="font-size: 35px">{{ weather }}</div>
                             </div>
                             <div> {{ date }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <table>
-                        <tr>
-                            <td>Luftfeuchtigkeit</td>
-                            <td> {{ humidity }}%</td>
-                        </tr>
-                        <tr>
-                            <td>Wind</td>
-                            <td> {{ wind }}km/h</td>
-                        </tr>
-                        <tr>
-                            <td>UV-Index</td>
-                            <td> {{ uv }}</td>
-                        </tr>
-                        <tr>
-                            <td>Luftdruck</td>
-                            <td> {{ pressure }} bar</td>
-                        </tr>
-                        <tr>
-                            <td>Min/Max °C</td>
-                            <td> {{ min }}/{{ max }} °C</td>
-                        </tr>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Luftfeuchtigkeit</td>
+                                <td> {{ humidity }}%</td>
+                            </tr>
+                            <tr>
+                                <td>Wind</td>
+                                <td> {{ wind }}km/h</td>
+                            </tr>
+                            <tr>
+                                <td>UV-Index</td>
+                                <td> {{ uv }}</td>
+                            </tr>
+                            <tr>
+                                <td>Luftdruck</td>
+                                <td> {{ pressure }} bar</td>
+                            </tr>
+                            <tr>
+                                <td>Min/Max °C</td>
+                                <td> {{ min }}/{{ max }} °C</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
