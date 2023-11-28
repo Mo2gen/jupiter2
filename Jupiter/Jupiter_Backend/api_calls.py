@@ -8,7 +8,7 @@ import requests
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://localhost:8000"
+server = "http://localhost:9000"
 
 # michal hallo
 
@@ -27,7 +27,9 @@ def save_forecast(forecast):
     t = int(time.time())
     forecast_request = {
         "pk_timestamp": t,
-        "currenttemperature": int (forecast["currently"]["temperature"])
+        "currenttemperature": int (forecast["currently"]["temperature"]),
+        "latitude": float(forecast["latitude"]),
+        "longitude": float(forecast["longitude"])
     }
     print(forecast_request)
 
