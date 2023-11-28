@@ -7,14 +7,14 @@ import json
 icons = {
     'clear': '',
     'cloudy': '',
-    'partly cloudy': '',
-    'rain': '',
+    'partly cloudy': '',
+    'rain': '',
     'thunderstorm': '',
-    'foggy': '',
+    'fog': '',
     'windy': '',
-    'snow': '',
+    'snow': '',
     'solar-eclipse': '',
-    'hail': ''
+    'hail': ''
 }
 
 
@@ -44,7 +44,8 @@ def index(request):
                 }
                 for b in ForecastHour.objects.values() if b['fk_timestamp_id'] == a['pk_timestamp']
             ]
-    print(temp)
+    for a in temp:
+        print(a)
     context['liste'] = json.dumps(temp)
     response = render(request, 'test.html', context)
     return response

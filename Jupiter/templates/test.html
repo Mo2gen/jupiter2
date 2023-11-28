@@ -89,9 +89,15 @@
                 d.normaltime = parseTime(d.normaltime);
             });
 
-            const x = d3.scaleTime()
-                .domain(d3.extent(data, d => d.normaltime))
+            //# Alt aber ich behalte es trotzdem für jetzt einmal hier, vielleicht kannst du's noch brauchen @alex
+            {#const x = d3.scaleTime()#}
+            {#    .domain(d3.extent(data, d => d.normaltime))#}
+            {#    .range([0, width]);#}
+
+            const x = d3.scalePoint()
+                .domain(data.map(d => d.normaltime))
                 .range([0, width]);
+
 
             const y = d3.scaleLinear()
                 .domain([minTemperature, maxTemperature])
