@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from datetime import datetime
+from Jupiter_Backend.models import ForecastHour, ForecastRequest
 icons = {
     'clear': '',
     'cloudy': '',
@@ -15,6 +16,11 @@ def index(request):
     print(request.COOKIES.get('long'))
     print(request.COOKIES.get('lat'))
     print(request.COOKIES.get('date'))
+    for a in ForecastRequest.objects.values():
+        print(a)
+        print(datetime.fromtimestamp(a['pk_timestamp']).date())
+        if request.COOKIES.get('date') == datetime.fromtimestamp(a['pk_timestamp']).date():
+            print('found!!!!!!!!!!!!!!!!!!')
     context = {
         "currentTemp": 8,
         "wind": 0,
