@@ -12,14 +12,15 @@ server = "http://localhost:9000"
 
 # michal hallo
 
-def get_forecast_json(apikey, lat, long):
+def get_forecast_json(apikey, lat, long, time = time.time()):
     """
     make API call to pirateweather, forcast for latitude and longitude
     -> return response as json, save timestamp of request
     lat: latitude
     long: longitude
     """
-    return requests.get(f"https://api.pirateweather.net/forecast/{apikey}/{lat},{long}?units=si").json()
+    return requests.get(f"https://api.pirateweather.net/forecast/{apikey}/{lat},{long},{time}?units=si").json()
+
 
 
 def save_forecast(forecast):
