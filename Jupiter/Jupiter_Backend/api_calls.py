@@ -10,6 +10,7 @@ apiKey = "C6KzQwff39MA8kV1"
 # Server adress und port
 server = "http://10.21.18.58"
 
+# michal hallo
 
 def get_forecast_json(apikey, lat, long):
     """
