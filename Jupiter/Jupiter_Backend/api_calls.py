@@ -8,7 +8,7 @@ import requests
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://10.21.18.58"
+server = "http://localhost:9000"
 
 # michal hallo
 
@@ -23,6 +23,7 @@ def get_forecast_json(apikey, lat, long):
 
 
 def save_forecast(forecast):
+    print(forecast)
     t = int(time.time())
     forecast_request = {
         "pk_timestamp": t,
@@ -38,8 +39,17 @@ def save_forecast(forecast):
         forecast_hour = {
             "fk_timestamp" : t,
             "timestamphour" : int(h["time"]),
-            "temperature" : int (h["temperature"])
+            "temperature_cur" : int (h["temperature"]),
+            "temperature_min": 12,# int(h["temepratureMin"]),
+            "temperature_max": 12,#int(h["temepratureMax"]),
+            "humidity" :  int(h["humidity"]),
+            "windspeed" : int(h["windSpeed"]),
+            "uvindex": int(h["uvIndex"]),
+            "airpressure": int(h["pressure"]),
+            "weathersummary": h["summary"],
+            "normaltime": convert_timestamp_normaltime(int(h["time"]))
         }
+
         print(forecast_hour)
         forcast_hours.append(forecast_hour)
         print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
@@ -47,11 +57,11 @@ def save_forecast(forecast):
 
 
 def convert_timestamp_normaltime(t):
-    return datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d %H:%M")
+    return datetime.datetime.fromtimestamp(t).strftime("%H:%M")
 
 
 def getandsave():
     save_forecast(get_forecast_json(apiKey, 41.210033, 16.363449, ))
 
 
-#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
