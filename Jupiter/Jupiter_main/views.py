@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from datetime import datetime
 from Jupiter_Backend.models import ForecastHour, ForecastRequest
+# from Jupiter_Backend.api_calls import getandsave
 import json
 
 # Fick dich
 icons = {
     'clear': '',
     'cloudy': '',
-    'partly cloudy': '',
+    'partly cloudy': '',
     'rain': '',
     'thunderstorm': '',
     'fog': '',
@@ -19,15 +20,17 @@ icons = {
 
 
 def index(request):
+    today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
+    now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
     context = {
-        "currentTemp": 8,
-        "wind": 0,
-        "humidity": 0,
-        "uv": 0,
-        "pressure": 0,
-        "min": 0,
-        "max": 0,
-        "weather": icons['clear'],
+        "currentTemp": now['temperature_cur'],
+        "wind": now['temperature_cur'],
+        "humidity": now['humidity'],
+        "uv": now['uvindex'],
+        "pressure": now['airpressure'],
+        "min": int,
+        "max": int,
+        "weather": icons[now['weathersummary'].lower()],
         "date": datetime.now().strftime('%A %H:%M'),
         'liste': dict
     }
@@ -44,8 +47,9 @@ def index(request):
                 }
                 for b in ForecastHour.objects.values() if b['fk_timestamp_id'] == a['pk_timestamp']
             ]
-    for a in temp:
-        print(a)
+    print([a['temperature_cur'] for a in today])
+    context['max'] = max([a['temperature_cur'] for a in today])
+    context['min'] = min([a['temperature_cur'] for a in today])
     context['liste'] = json.dumps(temp)
     response = render(request, 'test.html', context)
     return response
