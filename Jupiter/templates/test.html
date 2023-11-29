@@ -65,7 +65,8 @@
             </div>
         </div>
         <script>
-            const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59, 'weather': ''}];
+            const data = JSON.parse('{{ liste|safe }}');
+            console.log(data)
 
             const temperatureValues = data.map(d => d.Temperature);
             const minTemperature = d3.min(temperatureValues);
@@ -82,15 +83,21 @@
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+            const parseTime = d3.timeParse("%H:%M:%S");
 
             data.forEach(d => {
                 d.normaltime = parseTime(d.normaltime);
             });
 
-            const x = d3.scaleTime()
-                .domain(d3.extent(data, d => d.normaltime))
+            //# Alt aber ich behalte es trotzdem für jetzt einmal hier, vielleicht kannst du's noch brauchen @alex
+            {#const x = d3.scaleTime()#}
+            {#    .domain(d3.extent(data, d => d.normaltime))#}
+            {#    .range([0, width]);#}
+
+            const x = d3.scalePoint()
+                .domain(data.map(d => d.normaltime))
                 .range([0, width]);
+
 
             const y = d3.scaleLinear()
                 .domain([minTemperature, maxTemperature])
