@@ -24,6 +24,11 @@ def get_forecast_json(apikey, lat, long, time = time.time()):
 
 
 def save_forecast(forecast):
+    """
+    save forecast to database
+    :param forecast: forecast
+    :return: transmitted data
+    """
     print(forecast)
     t = int(time.time())
     forecast_request = {
@@ -62,6 +67,7 @@ def save_forecast(forecast):
         print(forecast_hour)
         forcast_hours.append(forecast_hour)
         print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+
     return forecast_request, forcast_hours
 
 
@@ -69,8 +75,24 @@ def convert_timestamp_normaltime(t):
     return datetime.datetime.fromtimestamp(t).strftime("%H:%M")
 
 
-def getandsave():
-    save_forecast(get_forecast_json(apiKey, 41.210033, 16.363449, ))
+def getandsave(lat,long, time):
+    """
+    get weather data from weather pirates and save to db
+
+    :param lat: latitude
+    :param long: longitude
+    :param time: time of forecast, if time = now -> now
+    :return: output of save forecast function
+
+    example:
+    print(getandsave(48.21003,16.363449,"now"))
+    """
+    if time == "now":
+        return save_forecast(get_forecast_json(apiKey, lat, long))
+    return save_forecast(get_forecast_json(apiKey, lat, long,time))
 
 
-print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+
+#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+
+print(getandsave(48.21003,16.363449,"now"))
