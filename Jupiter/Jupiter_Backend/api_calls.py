@@ -24,6 +24,11 @@ def get_forecast_json(apikey, lat, long, time = time.time()):
 
 
 def save_forecast(forecast):
+    """
+    save forecast to database
+    :param forecast: forecast
+    :return: transmitted data
+    """
     print(forecast)
     t = int(time.time())
     forecast_request = {
@@ -62,6 +67,7 @@ def save_forecast(forecast):
         print(forecast_hour)
         forcast_hours.append(forecast_hour)
         print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+
     return forecast_request, forcast_hours
 
 
