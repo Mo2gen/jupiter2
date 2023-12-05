@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ForecastRequest',
             fields=[
-                ('pk_forecast_id', models.AutoField(db_column='PK_forecast_ID', primary_key=True, serialize=False)),
+                ('pk_forecast_id', models.IntegerField(db_column='PK_forecast_ID', primary_key=True, serialize=False)),
                 ('pk_timestamp', models.IntegerField(blank=True, db_column='PK_timestamp', null=True)),
                 ('latitude', models.FloatField(db_column='latitude')),
                 ('longitude', models.FloatField(db_column='longitude')),

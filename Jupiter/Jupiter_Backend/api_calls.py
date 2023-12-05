@@ -4,11 +4,13 @@ import datetime
 import time
 import requests
 
+
+
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://localhost:80"
+server = "http://localhost:9000"
 
 # michal hallo
 
@@ -43,7 +45,7 @@ def get_and_save_hisotric(apiKey,lat,long,time):
     print (historic_date)
 
     hisotric_forecast = {
-        "pk_timestamp": historic_date,
+        "pk_timestamp": historic_date + lat + long,
         "currenttemperature": 0,
         "latitude": lat,
         "longitude": long
@@ -62,7 +64,7 @@ def get_and_save_hisotric(apiKey,lat,long,time):
         print(historic_hour_data)
 
         hisotoric_hour = {
-            "fk_timestamp": historic_date,
+            "fk_request": historic_date,
             "timestamphour": int(historic_hour_data["time"]),
             "temperature_cur": int (historic_hour_data["temperature"]),
             "humidity":  12,
@@ -79,6 +81,15 @@ def get_and_save_hisotric(apiKey,lat,long,time):
 
       #  print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
 
+def get_highest_id():
+    """
+
+    :return:
+    """
+    for request in ForecastRequest.objectcts.values():
+        print(request)
+
+    return 1
 
 def save_forecast(forecast):
     """
@@ -89,7 +100,10 @@ def save_forecast(forecast):
     print(forecast)
     t = int(time.time())
 
+    pk =  t + int(forecast["latitude"]) +  int(forecast["longitude"])
+
     forecast_request = {
+        "pk_forecast_id": pk,
         "pk_timestamp": t,
         "currenttemperature": int (forecast["currently"]["temperature"]),
         "latitude": float(forecast["latitude"]),
@@ -109,7 +123,7 @@ def save_forecast(forecast):
             break
 
         forecast_hour = {
-            "fk_timestamp": t,
+            "fk_request": pk,
             "timestamphour": int(h["time"]),
             "temperature_cur": int (h["temperature"]),
             "humidity":  float(h["humidity"]),
@@ -144,6 +158,7 @@ def getandsave(lat,long, time):
     print(getandsave(48.21003,16.363449,"now"))
     """
     if time == "now":
+        print(12)
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return get_and_save_hisotric(apiKey,lat.lat, long, time)
 
@@ -153,5 +168,5 @@ def getandsave(lat,long, time):
 
 #print(getandsave(48.21003,16.363449,"now"))
 
-get_and_save_hisotric(apiKey,"48.210033","16.363449",1699780703)
+getandsave("48.210033","16.363449","now")
 

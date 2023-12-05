@@ -19,7 +19,7 @@ class ForecastHour(models.Model):
 
 
 class ForecastRequest(models.Model):
-    pk_forecast_id = models.AutoField(db_column='PK_forecast_ID', primary_key=True)  # Field name made lowercase.
+    pk_forecast_id = models.IntegerField(db_column='PK_forecast_ID', primary_key=True)  # Field name made lowercase.
     pk_timestamp = models.IntegerField(db_column='PK_timestamp', blank=True, null=True)  # Field name made lowercase.
     latitude = models.FloatField(db_column='latitude')
     longitude = models.FloatField(db_column='longitude')
