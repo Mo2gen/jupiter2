@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from datetime import datetime
 from Jupiter_Backend.models import ForecastHour, ForecastRequest
-# from Jupiter_Backend.api_calls import getandsave
+from Jupiter_Backend.api_calls import getandsave as getandsave
 import json
 
-# Fick dich
 icons = {
     'clear': '',
     'cloudy': '',
@@ -20,24 +19,50 @@ icons = {
 
 
 def index(request):
+    if not request.COOKIES.get('lat'):
+        lat = 48.190893
+    else:
+        lat = request.COOKIES.get('lat')
+    if not request.COOKIES.get('long'):
+        long = 16.396895
+    else:
+        long = request.COOKIES.get('long')
+    if not request.COOKIES.get('date'):
+        date = datetime.now().strftime('%Y-%m-%d')
+    else:
+        date = request.COOKIES.get('date')
     today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
+    if not today:
+        getandsave(lat, long, "now")
+        today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
     context = {
         "currentTemp": now['temperature_cur'],
-        "wind": now['temperature_cur'],
-        "humidity": now['humidity'],
+        "wind": now['windspeed'] * 3.6,
+        "humidity": now['humidity'] * 100,
         "uv": now['uvindex'],
         "pressure": now['airpressure'],
-        "min": int,
-        "max": int,
+        "min": min([a['temperature_cur'] for a in today]),
+        "max": max([a['temperature_cur'] for a in today]),
         "weather": icons[now['weathersummary'].lower()],
         "date": datetime.now().strftime('%A %H:%M'),
         'liste': dict
     }
-    temp = None
+    temp = generatelist(date)
+    if not temp:
+        print(int(datetime.strptime(date, '%Y-%m-%d').timestamp()))
+        #getandsave(lat, long, int(datetime.strptime(date, '%Y-%m-%d').timestamp()))
+    #   temp = generatelist(date)
+    context['liste'] = json.dumps(temp)
+    response = render(request, 'test.html', context)
+    return response
+
+
+def generatelist(date: str):
+    liste = None
     for a in ForecastRequest.objects.values():
-        if request.COOKIES.get('date') == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d"):
-            temp = [
+        if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d"):
+            liste = [
                 {
                     'PK_timestamp': b['fk_timestamp_id'],
                     'timestamphour': b['timestamphour'],
@@ -47,9 +72,6 @@ def index(request):
                 }
                 for b in ForecastHour.objects.values() if b['fk_timestamp_id'] == a['pk_timestamp']
             ]
-    print([a['temperature_cur'] for a in today])
-    context['max'] = max([a['temperature_cur'] for a in today])
-    context['min'] = min([a['temperature_cur'] for a in today])
-    context['liste'] = json.dumps(temp)
-    response = render(request, 'test.html', context)
-    return response
+    if liste:
+        return liste
+    return

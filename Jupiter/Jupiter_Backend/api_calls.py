@@ -8,7 +8,7 @@ import requests
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://localhost:9000"
+server = "http://localhost:8000"
 
 # michal hallo
 
@@ -69,13 +69,11 @@ def save_forecast(forecast):
             break
 
         forecast_hour = {
-            "fk_timestamp" : t,
-            "timestamphour" : int(h["time"]),
-            "temperature_cur" : int (h["temperature"]),
-            "temperature_min": 12,# int(h["temepratureMin"]),
-            "temperature_max": 12,#int(h["temepratureMax"]),
-            "humidity" :  int(h["humidity"]),
-            "windspeed" : int(h["windSpeed"]),
+            "fk_timestamp": t,
+            "timestamphour": int(h["time"]),
+            "temperature_cur": int (h["temperature"]),
+            "humidity":  float(h["humidity"]),
+            "windspeed": float(h["windSpeed"]),
             "uvindex": int(h["uvIndex"]),
             "airpressure": int(h["pressure"]),
             "weathersummary": h["summary"],
@@ -108,10 +106,3 @@ def getandsave(lat,long, time):
     if time == "now":
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return save_forecast(get_hisoric_foreast_json(apiKey,lat,long,time))
-
-
-
-#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
-
-print(getandsave(48.21003,16.363449,"2023-10-10"))
-

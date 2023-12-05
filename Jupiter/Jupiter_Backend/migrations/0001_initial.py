@@ -17,8 +17,6 @@ class Migration(migrations.Migration):
                 ('pk_forecast_hour_id', models.AutoField(db_column='PK_forecast_hour_ID', primary_key=True, serialize=False)),
                 ('timestamphour', models.IntegerField(db_column='timestamphour')),
                 ('temperature_cur', models.IntegerField(db_column='temperature_cur')),
-                ('temperature_min', models.IntegerField(db_column='temperature_min')),
-                ('temperature_max', models.IntegerField(db_column='temperature_max')),
                 ('humidity', models.FloatField(db_column='humidity')),
                 ('windspeed', models.IntegerField(db_column='windSpeed')),
                 ('uvindex', models.IntegerField(db_column='uvIndex')),
