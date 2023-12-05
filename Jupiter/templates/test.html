@@ -66,7 +66,6 @@
         </div>
         <script>
             const data = JSON.parse('{{ liste|safe }}');
-            console.log(data)
 
             const temperatureValues = data.map(d => d.Temperature);
             const minTemperature = d3.min(temperatureValues);

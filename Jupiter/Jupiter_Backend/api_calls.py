@@ -103,7 +103,6 @@ def save_forecast(forecast):
     :param forecast: forecast
     :return: transmitted data
     """
-    print(forecast)
     t = int(time.time())
 
     pk =  t + int(forecast["latitude"]) +  int(forecast["longitude"])
@@ -164,16 +163,5 @@ def getandsave(lat,long, time):
     print(getandsave(48.21003,16.363449,"now"))
     """
     if time == "now":
-        print(12)
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return get_and_save_hisotric(apiKey,lat.lat, long, time)
-
-# print(getandsave(48.1940447,16.4133434,"now"))
-
-
-#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
-
-#print(getandsave(48.21003,16.363449,"now"))
-
-#getandsave("48.210033","16.363449","now")
-
