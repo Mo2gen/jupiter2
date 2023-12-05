@@ -5,3 +5,28 @@
 .weather {
     font-family: 'weathericons';
 }
+
+.bg-jupiter{
+    background-color: rgba(140, 136, 136, 0.25);
+
+}
+
+.ml-0{
+    margin-left: 10px;
+}
+mr-0{
+    margin-right: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+tr {
+    border-bottom: 1px solid #000;
+}
+
+th {
+    text-align: left;
+}
