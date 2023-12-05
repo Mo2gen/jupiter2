@@ -19,22 +19,29 @@ icons = {
 
 
 def index(request):
+    global todayRequest
     if not request.COOKIES.get('lat'):
-        lat = 48.190893
+        lat = 48.1940447
     else:
         lat = request.COOKIES.get('lat')
     if not request.COOKIES.get('long'):
-        long = 16.396895
+        long = 16.4133434
     else:
         long = request.COOKIES.get('long')
     if not request.COOKIES.get('date'):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
         date = request.COOKIES.get('date')
-    today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
-    if not today:
+
+    for a in ForecastRequest.objects.values():
+        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == lat and a['longitude'] == long:
+            todayRequest = a
+    if not todayRequest:
         getandsave(lat, long, "now")
-        today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
+        for a in ForecastRequest.objects.values():
+            if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == lat and a['longitude'] == long:
+                todayRequest = a
+    today = [a for a in ForecastHour.objects.values() if a['fk_request'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
     context = {
         "currentTemp": now['temperature_cur'],
