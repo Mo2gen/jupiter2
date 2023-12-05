@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from datetime import datetime
-from Jupiter_Backend.models import ForecastHour, ForecastRequest
-from Jupiter_Backend.api_calls import getandsave as getandsave
+#from Jupiter_Backend.models import ForecastHour, ForecastRequest
+#from Jupiter_Backend.api_calls import getandsave as getandsave
 import json
 
 icons = {
@@ -32,6 +32,10 @@ def index(request):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
         date = request.COOKIES.get('date')
+   # today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
+   # if not today:
+       # getandsave(lat, long, "now")
+        #today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
 
     for a in ForecastRequest.objects.values():
         if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == lat and a['longitude'] == long:
@@ -82,3 +86,4 @@ def generatelist(date: str):
     if liste:
         return liste
     return
+

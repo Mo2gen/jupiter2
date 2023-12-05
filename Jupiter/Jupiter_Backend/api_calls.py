@@ -47,8 +47,10 @@ def get_and_save_hisotric(apiKey,lat,long,time):
     historic_date = datetime.datetime.timestamp(historic_date)
     print (historic_date)
 
+    pk = t + int(forecast["latitude"]) +  int(forecast["longitude"])
+
     hisotric_forecast = {
-        "pk_forecast_id": t + int(forecast["latitude"]) +  int(forecast["longitude"]),
+        "pk_forecast_id":pk ,
         "pk_timestamp": t,
         "currenttemperature": int(forecast["currently"]["temperature"]),
         "latitude": float(forecast["latitude"]),
@@ -69,14 +71,14 @@ def get_and_save_hisotric(apiKey,lat,long,time):
 
         hisotoric_hour = {
             "fk_request": pk,
-            "timestamphour": int(h["time"]),
-            "temperature_cur": int(h["temperature"]),
-            "humidity": float(h["humidity"]),
-            "windspeed": float(h["windSpeed"]),
-            "uvindex": int(h["uvIndex"]),
-            "airpressure": int(h["pressure"]),
-            "weathersummary": h["summary"],
-            "normaltime": convert_timestamp_normaltime(int(h["time"]))
+            "timestamphour": int(historic_hour_data["time"]),
+            "temperature_cur": int(historic_hour_data["temperature"]),
+            "humidity": float(historic_hour_data["humidity"]),
+            "windspeed": float(historic_hour_data["windSpeed"]),
+            "uvindex": int(historic_hour_data["uvIndex"]),
+            "airpressure": int(historic_hour_data["pressure"]),
+            "weathersummary": historic_hour_data["summary"],
+            "normaltime": convert_timestamp_normaltime(int(historic_hour_data["time"]))
         }
 
         print(hisotoric_hour)
@@ -172,5 +174,5 @@ def getandsave(lat,long, time):
 
 #print(getandsave(48.21003,16.363449,"now"))
 
-getandsave("48.210033","16.363449","now")
+#getandsave("48.210033","16.363449","now")
 
