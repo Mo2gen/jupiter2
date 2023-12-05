@@ -10,7 +10,7 @@ import requests
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://localhost:9000"
+server = "http://localhost:8000"
 
 # michal hallo
 
@@ -168,6 +168,7 @@ def getandsave(lat,long, time):
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return get_and_save_hisotric(apiKey,lat.lat, long, time)
 
+# print(getandsave(48.1940447,16.4133434,"now"))
 
 
 #print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))

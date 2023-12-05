@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from datetime import datetime
-#from Jupiter_Backend.models import ForecastHour, ForecastRequest
-#from Jupiter_Backend.api_calls import getandsave as getandsave
+from Jupiter_Backend.models import ForecastHour, ForecastRequest
+from Jupiter_Backend.api_calls import getandsave as getandsave
 import json
 
 icons = {
@@ -19,33 +19,28 @@ icons = {
 
 
 def index(request):
-    global todayRequest
     if not request.COOKIES.get('lat'):
         lat = 48.1940447
     else:
-        lat = request.COOKIES.get('lat')
+        lat = float(request.COOKIES.get('lat'))
     if not request.COOKIES.get('long'):
         long = 16.4133434
     else:
-        long = request.COOKIES.get('long')
+        long = float(request.COOKIES.get('long'))
     if not request.COOKIES.get('date'):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
         date = request.COOKIES.get('date')
-   # today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
-   # if not today:
-       # getandsave(lat, long, "now")
-        #today = [a for a in ForecastHour.objects.values() if datetime.fromtimestamp(a['fk_timestamp_id']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d")]
-
+    todayRequest = None
     for a in ForecastRequest.objects.values():
-        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == lat and a['longitude'] == long:
+        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == round(lat, 3) and a['longitude'] == round(long, 4):
             todayRequest = a
     if not todayRequest:
         getandsave(lat, long, "now")
         for a in ForecastRequest.objects.values():
-            if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == lat and a['longitude'] == long:
+            if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and a['latitude'] == round(lat, 3) and a['longitude'] == round(long, 4):
                 todayRequest = a
-    today = [a for a in ForecastHour.objects.values() if a['fk_request'] == todayRequest['pk_forecast_id']]
+    today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
     context = {
         "currentTemp": now['temperature_cur'],
@@ -75,13 +70,12 @@ def generatelist(date: str):
         if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d"):
             liste = [
                 {
-                    'PK_timestamp': b['fk_timestamp_id'],
                     'timestamphour': b['timestamphour'],
                     'normaltime': b['normaltime'].strftime('%H:%M:%S'),
                     'Temperature': b['temperature_cur'],
                     'weather': icons[b['weathersummary'].lower()]
                 }
-                for b in ForecastHour.objects.values() if b['fk_timestamp_id'] == a['pk_timestamp']
+                for b in ForecastHour.objects.values() if b['fk_request_id'] == a['pk_forecast_id']
             ]
     if liste:
         return liste
