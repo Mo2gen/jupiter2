@@ -166,11 +166,3 @@ def getandsave(lat,long, time):
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return get_and_save_hisotric(apiKey,lat.lat, long, time)
 
-
-
-#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
-
-#print(getandsave(48.21003,16.363449,"now"))
-
-getandsave("48.210033","16.363449","now")
-
