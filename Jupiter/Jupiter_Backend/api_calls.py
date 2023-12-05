@@ -33,6 +33,9 @@ def get_hisoric_foreast_json(apikey, lat, long, time):
 def get_and_save_hisotric(apiKey,lat,long,time):
     """
 
+
+    db request NEEDS REWORK!
+
     :param apiKey:
     :param lat:
     :param long:
@@ -45,10 +48,11 @@ def get_and_save_hisotric(apiKey,lat,long,time):
     print (historic_date)
 
     hisotric_forecast = {
-        "pk_timestamp": historic_date + lat + long,
-        "currenttemperature": 0,
-        "latitude": lat,
-        "longitude": long
+        "pk_forecast_id": t + int(forecast["latitude"]) +  int(forecast["longitude"]),
+        "pk_timestamp": t,
+        "currenttemperature": int(forecast["currently"]["temperature"]),
+        "latitude": float(forecast["latitude"]),
+        "longitude": float(forecast["longitude"])
     }
 
    # print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
@@ -64,15 +68,15 @@ def get_and_save_hisotric(apiKey,lat,long,time):
         print(historic_hour_data)
 
         hisotoric_hour = {
-            "fk_request": historic_date,
-            "timestamphour": int(historic_hour_data["time"]),
-            "temperature_cur": int (historic_hour_data["temperature"]),
-            "humidity":  12,
-            "windspeed": float(historic_hour_data["windSpeed"]),
-            "uvindex": 12,
-            "airpressure": int(historic_hour_data["pressure"]),
-            "weathersummary": historic_hour_data["summary"],
-            "normaltime": datetime.datetime.fromtimestamp(h)
+            "fk_request": pk,
+            "timestamphour": int(h["time"]),
+            "temperature_cur": int(h["temperature"]),
+            "humidity": float(h["humidity"]),
+            "windspeed": float(h["windSpeed"]),
+            "uvindex": int(h["uvIndex"]),
+            "airpressure": int(h["pressure"]),
+            "weathersummary": h["summary"],
+            "normaltime": convert_timestamp_normaltime(int(h["time"]))
         }
 
         print(hisotoric_hour)
