@@ -21,6 +21,24 @@ def get_forecast_json(apikey, lat, long, time = time.time()):
     """
     return requests.get(f"https://api.pirateweather.net/forecast/{apikey}/{lat},{long},{time}?units=si").json()
 
+def get_hisoric_foreast_json(apikey, lat, long, time):
+    """
+
+    :return:
+    """
+    return requests.get(f"https://timemachine.pirateweather.net/forecast/{apikey}/{lat},{long},{time}?units=si").json()
+
+def get_entire_hisotric_day(apiKey,lat,long,time):
+    """
+
+    :param apiKey:
+    :param lat:
+    :param long:
+    :param time:
+    :return:
+    """
+    start = datetime.utcfromtimestamp(time)
+    start = start.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def save_forecast(forecast):
@@ -89,10 +107,11 @@ def getandsave(lat,long, time):
     """
     if time == "now":
         return save_forecast(get_forecast_json(apiKey, lat, long))
-    return save_forecast(get_forecast_json(apiKey, lat, long,time))
+    return save_forecast(get_hisoric_foreast_json(apiKey,lat,long,time))
 
 
 
 #print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
 
-print(getandsave(48.21003,16.363449,"now"))
+print(getandsave(48.21003,16.363449,"2023-10-10"))
+
