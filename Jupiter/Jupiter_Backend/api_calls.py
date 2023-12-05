@@ -4,11 +4,13 @@ import datetime
 import time
 import requests
 
+
+
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
-server = "http://localhost:8000"
+server = "http://localhost:9000"
 
 # michal hallo
 
@@ -28,8 +30,11 @@ def get_hisoric_foreast_json(apikey, lat, long, time):
     """
     return requests.get(f"https://timemachine.pirateweather.net/forecast/{apikey}/{lat},{long},{time}?units=si").json()
 
-def get_entire_hisotric_day(apiKey,lat,long,time):
+def get_and_save_hisotric(apiKey,lat,long,time):
     """
+
+
+    db request NEEDS REWORK!
 
     :param apiKey:
     :param lat:
@@ -37,9 +42,58 @@ def get_entire_hisotric_day(apiKey,lat,long,time):
     :param time:
     :return:
     """
-    start = datetime.utcfromtimestamp(time)
-    start = start.replace(hour=0, minute=0, second=0, microsecond=0)
+    historic_date = datetime.datetime.fromtimestamp(time)
+    historic_date = historic_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    historic_date = datetime.datetime.timestamp(historic_date)
+    print (historic_date)
 
+    hisotric_forecast = {
+        "pk_forecast_id": t + int(forecast["latitude"]) +  int(forecast["longitude"]),
+        "pk_timestamp": t,
+        "currenttemperature": int(forecast["currently"]["temperature"]),
+        "latitude": float(forecast["latitude"]),
+        "longitude": float(forecast["longitude"])
+    }
+
+   # print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
+
+    h = historic_date
+    for hour in range(24):
+        print(h)
+        print(datetime.datetime.fromtimestamp(h))
+        print(get_hisoric_foreast_json(apiKey,lat,long,h))
+
+        historic_hour_data = get_hisoric_foreast_json(apiKey,lat,long,time) ["currently"]
+
+        print(historic_hour_data)
+
+        hisotoric_hour = {
+            "fk_request": pk,
+            "timestamphour": int(h["time"]),
+            "temperature_cur": int(h["temperature"]),
+            "humidity": float(h["humidity"]),
+            "windspeed": float(h["windSpeed"]),
+            "uvindex": int(h["uvIndex"]),
+            "airpressure": int(h["pressure"]),
+            "weathersummary": h["summary"],
+            "normaltime": convert_timestamp_normaltime(int(h["time"]))
+        }
+
+        print(hisotoric_hour)
+
+        historic_date = h + 3600
+
+      #  print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+
+def get_highest_id():
+    """
+
+    :return:
+    """
+    for request in ForecastRequest.objectcts.values():
+        print(request)
+
+    return 1
 
 def save_forecast(forecast):
     """
@@ -49,7 +103,11 @@ def save_forecast(forecast):
     """
     print(forecast)
     t = int(time.time())
+
+    pk =  t + int(forecast["latitude"]) +  int(forecast["longitude"])
+
     forecast_request = {
+        "pk_forecast_id": pk,
         "pk_timestamp": t,
         "currenttemperature": int (forecast["currently"]["temperature"]),
         "latitude": float(forecast["latitude"]),
@@ -69,7 +127,7 @@ def save_forecast(forecast):
             break
 
         forecast_hour = {
-            "fk_timestamp": t,
+            "fk_request": pk,
             "timestamphour": int(h["time"]),
             "temperature_cur": int (h["temperature"]),
             "humidity":  float(h["humidity"]),
@@ -104,5 +162,15 @@ def getandsave(lat,long, time):
     print(getandsave(48.21003,16.363449,"now"))
     """
     if time == "now":
+        print(12)
         return save_forecast(get_forecast_json(apiKey, lat, long))
-    return save_forecast(get_hisoric_foreast_json(apiKey,lat,long,time))
+    return get_and_save_hisotric(apiKey,lat.lat, long, time)
+
+
+
+#print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
+
+#print(getandsave(48.21003,16.363449,"now"))
+
+getandsave("48.210033","16.363449","now")
+
