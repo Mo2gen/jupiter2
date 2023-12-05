@@ -32,8 +32,6 @@ def index(request):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
         date = request.COOKIES.get('date')
-    print(lat)
-    print(long)
     todayRequest = None
     for a in ForecastRequest.objects.values():
         if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
@@ -58,9 +56,6 @@ def index(request):
         'liste': dict
     }
     temp = generatelist(date, lat, long)
-    print(temp)
-    if not temp:
-        print(int(datetime.strptime(date, '%Y-%m-%d').timestamp()))
     context['liste'] = json.dumps(temp)
     response = render(request, 'test.html', context)
     return response
