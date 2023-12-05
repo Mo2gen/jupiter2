@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('temperature_cur', models.IntegerField(db_column='temperature_cur')),
                 ('temperature_min', models.IntegerField(db_column='temperature_min')),
                 ('temperature_max', models.IntegerField(db_column='temperature_max')),
-                ('humidity', models.IntegerField(db_column='humidity')),
+                ('humidity', models.FloatField(db_column='humidity')),
                 ('windspeed', models.IntegerField(db_column='windSpeed')),
                 ('uvindex', models.IntegerField(db_column='uvIndex')),
                 ('airpressure', models.IntegerField(db_column='airPressure')),
