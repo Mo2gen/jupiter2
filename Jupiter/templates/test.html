@@ -63,7 +63,7 @@
                 <div><input id="date" type="date"></div>
                 <div class="col p-0" id="chart"></div>
             </div>
-            <div class="row mw-100 ms-0 ps-1 bg-jupiter">
+            <div class="row w-100 ps-1 bg-jupiter">
                 <div class="col p-0" id="chart_luft"></div>
             </div>
         </div>
@@ -77,22 +77,23 @@
             var minLuft = d3.min(luftValues);
             var maxLuft = d3.max(luftValues);
 
-            var margin = { top: 40, right: 30, bottom: 30, left: 40 };
-            var luftmargin = { top: 0, right: 30, bottom: 30, left: 40 };
+            var margin = { top: 50, right: 0, bottom: 30, left: 40 };
+            var luftmargin = { top: 0, right: 0, bottom: 30, left: 40 };
             var width = window.innerWidth - margin.left - margin.right;
+            var luftwidth = window.innerWidth - luftmargin.left - luftmargin.right;
             var height = 250 - margin.top - margin.bottom;
 
             var svg = d3.select("#chart")
                 .append("svg")
-                .attr("width", width + margin.left + margin.right)
+                .attr("width", width)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
             var luft = d3.select("#chart_luft")
                 .append("svg")
-                .attr("width", width + luftmargin.left + luftmargin.right)
-                .attr("height", height + margin.top + luftmargin.bottom)
+                .attr("width", luftwidth)
+                .attr("height", height + luftmargin.top + luftmargin.bottom)
                 .append("g")
                 .attr("transform", `translate(${luftmargin.left},${luftmargin.top})`);
 
