@@ -36,11 +36,13 @@ def index(request):
     for a in ForecastRequest.objects.values():
         if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
             todayRequest = a
+            break
     if not todayRequest:
         getandsave(lat, long, "now")
         for a in ForecastRequest.objects.values():
             if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
                 todayRequest = a
+                break
     today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
     context = {
@@ -61,7 +63,14 @@ def index(request):
     return response
 
 
-def generatelist(date: str, lat, long):
+def generatelist(date: str, lat: float, long: float) -> dict:
+    """
+    Generiert eine Dictionary mit Daten für das Generieren des Graphen
+    :param date: Datum im Jahr-Monat-Tag Format
+    :param lat: Längengrad
+    :param long: Breitengrad
+    :return:
+    """
     liste = None
     for a in ForecastRequest.objects.values():
         if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
@@ -77,4 +86,3 @@ def generatelist(date: str, lat, long):
     if liste:
         return liste
     return
-

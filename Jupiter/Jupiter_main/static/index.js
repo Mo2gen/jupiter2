@@ -12,6 +12,11 @@ async function startfun() {
             setCookie(lat, long)
         }
     }
+    document.getElementById('date').onchange =function () {
+        date = document.getElementById('date').value
+        setCookie(lat, long)
+        console.log('datum geändert!' + date)
+    };
     try {
         if (document.cookie.split('; ')[2] == undefined) {
             await getCurrentCoords();
