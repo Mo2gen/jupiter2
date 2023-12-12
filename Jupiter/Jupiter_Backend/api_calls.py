@@ -32,9 +32,7 @@ def get_hisoric_foreast_json(apikey, lat, long, time):
 
 def save_hisotric(apiKey, lat, long, time):
     """
-
-
-    db request NEEDS REWORK!
+!
 
     :param apiKey:
     :param lat:
@@ -47,7 +45,6 @@ def save_hisotric(apiKey, lat, long, time):
     historic_date = historic_date.replace(hour=0, minute=0, second=0, microsecond=0)
     historic_date = datetime.datetime.timestamp(historic_date)
 
-
     pk = time + lat + long
 
     hisotric_forecast = {
@@ -58,35 +55,24 @@ def save_hisotric(apiKey, lat, long, time):
         "longitude": long
     }
 
-    print(hisotric_forecast)
     print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
 
-    h = historic_date
-    for hour in range(24):
-        print(h)
-        print(datetime.datetime.fromtimestamp(h))
-        print(get_hisoric_foreast_json(apiKey,lat,long,h))
-
-        historic_hour_data = get_hisoric_foreast_json(apiKey,lat,long,time)['currently']
-
-        #print(historic_hour_data)
+    for hour in get_hisoric_foreast_json(apiKey,lat,long,time)['hourly']['data']:
+        hour_time_unix = hour["time"]
+        hour_time_sql = convert_timestamp_normaltime(hour_time_unix)
 
         hisotoric_hour = {
             "fk_request": int(pk),
-            "timestamphour": int(historic_hour_data["time"]),
-            "temperature_cur": int(historic_hour_data["temperature"]),
+            "timestamphour": int(hour["time"]),
+            "temperature_cur": int(hour["temperature"]),
             "humidity":  12,
-            "windspeed": float(historic_hour_data["windSpeed"]),
+            "windspeed": float(hour["windSpeed"]),
             "uvindex": 12,
-            "airpressure": int(historic_hour_data["pressure"]),
-            "weathersummary": historic_hour_data["summary"],
-            "normaltime": historic_hour_data["time"]
+            "airpressure": int(hour["pressure"]),
+            "weathersummary": hour["summary"],
+            "normaltime": hour_time_sql
         }
-
-        print(hisotoric_hour)
-
-        historic_date = h + 3600
-
+        print(hour_time_sql)
         print(requests.post(f"{server}/api/Forecast/", json=hisotoric_hour))
 
 def get_highest_id():
@@ -175,7 +161,7 @@ def getandsave(lat,long, time):
 
 #print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
 
-print(getandsave(48.21003,16.363449,1697107647))
+#print(getandsave(48.21003,16.363449,1637107647))
 
 #getandsave("48.210033","16.363449","now")
 
