@@ -7,7 +7,7 @@ html,body {
 }
 
 .weather {
-    font-family: 'weathericons';
+    font-family: 'weathericons', serif;
 }
 
 .bg-jupiter{
