@@ -130,7 +130,9 @@ def save_forecast(forecast):
 
         print(forecast_hour)
         forcast_hours.append(forecast_hour)
-        print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+        #print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+
+    print(requests.post(f"{server}/api/Forecast/", json=forecast_hours))
 
     return forecast_request, forcast_hours
 
