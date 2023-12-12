@@ -4,8 +4,6 @@ import datetime
 import time
 import requests
 
-
-
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
 
@@ -25,20 +23,26 @@ def get_forecast_json(apikey, lat, long, time = time.time()):
 
 def get_hisoric_foreast_json(apikey, lat, long, time):
     """
-
+    make API call to pirateweather historic, forcast for latitude and longitude
+    -> return response as json
     :return:
     """
     return requests.get(f"https://timemachine.pirateweather.net/forecast/{apikey}/{lat},{long},{time}?units=si").json()
 
 def save_hisotric(apiKey, lat, long, time):
     """
-!
+    save hisotric forecast
 
-    :param apiKey:
-    :param lat:
-    :param long:
-    :param time:
-    :return:
+    converts timestamp to 00:00 of date
+        -> API Call to Pirateweather timemachine
+            -> hourly Forecast from 00:00 of date
+    save to db afterwards
+
+    :param apiKey: Pirateweather API key
+    :param lat: latitude
+    :param long: longitude
+    :param time: unix timestmap on given day
+    :return
     """
 
     historic_date = datetime.datetime.fromtimestamp(time)
@@ -77,7 +81,7 @@ def save_hisotric(apiKey, lat, long, time):
 
 def get_highest_id():
     """
-
+    parked
     :return:
     """
     for request in ForecastRequest.objectcts.values():
@@ -91,6 +95,7 @@ def save_forecast(forecast):
     :param forecast: forecast
     :return: transmitted data
     """
+
     print(forecast)
     t = int(time.time())
 
@@ -137,6 +142,11 @@ def save_forecast(forecast):
 
 
 def convert_timestamp_normaltime(t):
+    """
+    converts unix timestamp to sql timestamp, removes date
+    :param t: unix timestamp
+    :return: sql timestamp only with hour and minute
+    """
     return datetime.datetime.fromtimestamp(t).strftime("%H:%M")
 
 
