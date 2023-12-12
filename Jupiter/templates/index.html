@@ -1,113 +1,164 @@
+<!DOCTYPE html>
+{% load bootstrap5 %}
+{% bootstrap_css %}
 {% load static %}
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Jupiter</title>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <link rel="stylesheet" href="{% static 'indexcss.css' %}">
-    <link rel="stylehseet" href="{% static 'css/cweather-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/weather-icons.min.css' %}">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Jupiter</title>
+        <link rel="stylesheet" href="{% static 'indexcss.css' %}">
+        <link rel="stylehseet" href="{% static 'css/cweather-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'css/weather-icons.min.css' %}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+        <script src="{% static 'index.js' %}"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApJ5QaTevQDcKAeHovgFJOeOurAPXGZxs&libraries=places"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    </head>
+    <body onload="startfun()">
+        <div class="container-fluid m-0 p-0 bg">
+            <div class="row">
+                <div class="col bg-jupiter rounded mb-2">
+                    <div class="col">
+                        <div class="flex-row ms-2 mt-2">
+                            <div>
+                                <input id="location" type="text" placeholder="Location" height="10px">
+                                <button class="rounded-circle" id="change" type="submit" onclick=changeCity()><img src="{% static 'lupe.png' %}" width="15px" height="15px"></button>
+                            </div>
+                            <div class="row">
+                                <div class="col-2"> <h1>{{ currentTemp }}°C</h1></div>
+                                <div class="col weather" style="font-size: 35px">{{ weather }}</div>
+                            </div>
+                            <div> {{ date }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col bg-jupiter rounded ml-0 mb-2">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Luftfeuchtigkeit</td>
+                                <td> {{ humidity }}%</td>
+                            </tr>
+                            <tr>
+                                <td>Wind</td>
+                                <td> {{ wind }}km/h</td>
+                            </tr>
+                            <tr>
+                                <td>UV-Index</td>
+                                <td> {{ uv }}</td>
+                            </tr>
+                            <tr>
+                                <td>Luftdruck</td>
+                                <td> {{ pressure }} mBar</td>
+                            </tr>
+                            <tr>
+                                <td>Min/Max °C</td>
+                                <td> {{ min }}/{{ max }} °C</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row mw-100 ms-0 ps-0 bg-jupiter">
+                <div><input id="date" type="date"></div>
+                <div class="col p-0" id="chart" style="max-width: 100vw"></div>
+            </div>
+        </div>
+        <script>
+            const data = JSON.parse('{{ liste|safe }}');
 
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <script src="{% static 'index.js' %}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApJ5QaTevQDcKAeHovgFJOeOurAPXGZxs&libraries=places"></script>
-</head>
-<body onload=startfun()>
-<div id="header">
-    <input id="location" type="text" placeholder="Location">
-    <button id="change" type="submit" onclick=changeCity()><img src="{% static 'lupe.png' %}" width="18px" height="18px"></button>
-</div>
-<div id="currentTemp"> {{ currentTemp }} °C</div>
-    <div id="chart"></div>
-    <script>
-        const data = [{'PK_timestamp': 1696926405.348035, 'timestamphour': 1696924800, 'normaltime': '2023-10-10 10:00:00', 'Temperature': 16.39, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696928400, 'normaltime': '2023-10-10 11:00:00', 'Temperature': 18.52, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696932000, 'normaltime': '2023-10-10 12:00:00', 'Temperature': 19.4, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696935600, 'normaltime': '2023-10-10 13:00:00', 'Temperature': 19.64, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696939200, 'normaltime': '2023-10-10 14:00:00', 'Temperature': 20.47, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696942800, 'normaltime': '2023-10-10 15:00:00', 'Temperature': 20.29, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696946400, 'normaltime': '2023-10-10 16:00:00', 'Temperature': 20.16, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696950000, 'normaltime': '2023-10-10 17:00:00', 'Temperature': 19.34, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696953600, 'normaltime': '2023-10-10 18:00:00', 'Temperature': 18.28, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696957200, 'normaltime': '2023-10-10 19:00:00', 'Temperature': 17.26, 'weather': ''}, {'PK_timestamp': 1696926405.348035, 'timestamphour': 1696960800, 'normaltime': '2023-10-10 20:00:00', 'Temperature': 16.59, 'weather': ''}];
+            const temperatureValues = data.map(d => d.Temperature);
+            const minTemperature = d3.min(temperatureValues);
+            const maxTemperature = d3.max(temperatureValues);
 
-        const temperatureValues = data.map(d => d.Temperature);
-        const minTemperature = d3.min(temperatureValues);
-        const maxTemperature = d3.max(temperatureValues);
+            const margin = { top: 40, right: 30, bottom: 30, left: 40 };
+            const width = window.innerWidth - margin.left - margin.right;
+            const height = 200 - margin.top - margin.bottom;
 
-        const margin = { top: 40, right: 30, bottom: 30, left: 40 };
-        const width = window.innerWidth - margin.left - margin.right;
-        const height = 200 - margin.top - margin.bottom;
+            const svg = d3.select("#chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        const svg = d3.select("#chart")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+            const parseTime = d3.timeParse("%H:%M:%S");
 
-        const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+            data.forEach(d => {
+                d.normaltime = parseTime(d.normaltime);
+            });
 
-        data.forEach(d => {
-            d.normaltime = parseTime(d.normaltime);
-        });
+            //# Alt aber ich behalte es trotzdem für jetzt einmal hier, vielleicht kannst du's noch brauchen @alex
+            {#const x = d3.scaleTime()#}
+            {#    .domain(d3.extent(data, d => d.normaltime))#}
+            {#    .range([0, width]);#}
 
-        const x = d3.scaleTime()
-            .domain(d3.extent(data, d => d.normaltime))
-            .range([0, width]);
+            const x = d3.scalePoint()
+                .domain(data.map(d => d.normaltime))
+                .range([0, width]);
 
-        const y = d3.scaleLinear()
-            .domain([minTemperature, maxTemperature])
-            .range([height, 25]);
 
-        const line = d3.line()
-            .x(d => x(d.normaltime))
-            .y(d => y(d.Temperature));
+            const y = d3.scaleLinear()
+                .domain([minTemperature, maxTemperature])
+                .range([height, 25]);
 
-        svg.selectAll(".dot")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("class", "dot")
-            .attr("cx", d => x(d.normaltime))
-            .attr("cy", d => y(d.Temperature))
-            .attr("r", 4)
-            .style("fill", "steelblue");
+            const line = d3.line()
+                .x(d => x(d.normaltime))
+                .y(d => y(d.Temperature));
 
-        svg.selectAll(".label")
-            .data(data)
-            .enter()
-            .append("text")
-            .attr("class", "label")
-            .attr("x", d => x(d.normaltime))
-            .attr("y", -10)
-            .text(d => `${d.Temperature}°C`)
-            .style("font-size", "12px")
-            .style("text-anchor", "middle")
-            .style("alignment-baseline", "bottom");
+            svg.selectAll(".dot")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.normaltime))
+                .attr("cy", d => y(d.Temperature))
+                .attr("r", 4)
+                .style("fill", "black");
 
-        svg.selectAll(".time-label")
-            .data(data)
-            .enter()
-            .append("text")
-            .attr("class", "time-label")
-            .attr("x", d => x(d.normaltime))
-            .attr("y", -25)
-            .text(d => d3.timeFormat("%H:%M")(d.normaltime))
-            .style("font-size", "12px")
-            .style("text-anchor", "middle")
-            .style("alignment-baseline", "bottom");
+            svg.selectAll(".label")
+                .data(data)
+                .enter()
+                .append("text")
+                .attr("class", "label")
+                .attr("x", d => x(d.normaltime))
+                .attr("y", -10)
+                .text(d => `${d.Temperature}°C`)
+                .style("font-size", "12px")
+                .style("text-anchor", "middle")
+                .style("alignment-baseline", "bottom");
 
-        svg.selectAll(".icon-label")
-            .data(data)
-            .enter()
-            .append("text")
-            .attr("class", "icon-label")
-            .attr("x", d => x(d.normaltime))
-            .attr("y", 10)
-            .text(d => d.weather)
-            .style("font-family", "weathericons")
-            .style("font-size", "18px")
-            .style("text-anchor", "middle")
-            .style("alignment-baseline", "bottom");
+            svg.selectAll(".time-label")
+                .data(data)
+                .enter()
+                .append("text")
+                .attr("class", "time-label")
+                .attr("x", d => x(d.normaltime))
+                .attr("y", -25)
+                .text(d => d3.timeFormat("%H:%M")(d.normaltime))
+                .style("font-size", "12px")
+                .style("text-anchor", "middle")
+                .style("alignment-baseline", "bottom");
 
-        svg.append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 2)
-            .attr("d", line);
-    </script>
-</body>
+            svg.selectAll(".icon-label")
+                .data(data)
+                .enter()
+                .append("text")
+                .attr("class", "icon-label")
+                .attr("x", d => x(d.normaltime))
+                .attr("y", 10)
+                .text(d => d.weather)
+                .style("font-family", "weathericons")
+                .style("font-size", "18px")
+                .style("text-anchor", "middle")
+                .style("alignment-baseline", "bottom");
+
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+        </script>
+    </body>
 </html>
