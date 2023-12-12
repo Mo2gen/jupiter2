@@ -49,10 +49,10 @@ def save_hisotric(apiKey, lat, long, time):
     historic_date = historic_date.replace(hour=0, minute=0, second=0, microsecond=0)
     historic_date = datetime.datetime.timestamp(historic_date)
 
-    pk = time + lat + long
+    pk = int(time) + int(lat) + int(long)
 
     hisotric_forecast = {
-        "pk_forecast_id": int(pk),
+        "pk_forecast_id": pk,
         "pk_timestamp": time,
         "currenttemperature":  12,
         "latitude": lat,
@@ -79,15 +79,7 @@ def save_hisotric(apiKey, lat, long, time):
         print(hour_time_sql)
         print(requests.post(f"{server}/api/Forecast/", json=hisotoric_hour))
 
-def get_highest_id():
-    """
-    parked
-    :return:
-    """
-    for request in ForecastRequest.objectcts.values():
-        print(request)
 
-    return 1
 
 def save_forecast(forecast):
     """
@@ -173,5 +165,5 @@ def getandsave(lat,long, time):
 
 #print(getandsave(48.21003,16.363449,1699777708))
 
-#getandsave("48.210033","16.363449","now")
+#getandsave(48.210033,16.363449,1699277708)
 
