@@ -90,7 +90,6 @@ def save_forecast(forecast):
     :return: transmitted data
     """
 
-    print(forecast)
     t = int(time.time())
 
     pk =  int(t) + int(forecast["latitude"]*1000) +  int(forecast["longitude"]*1000)
@@ -102,7 +101,6 @@ def save_forecast(forecast):
         "latitude": float(forecast["latitude"]),
         "longitude": float(forecast["longitude"])
     }
-    print(forecast_request)
 
     print(requests.post(f"{server}/api/Forecast_Request/", json=forecast_request))
 
@@ -128,7 +126,6 @@ def save_forecast(forecast):
         }
 
 
-        print(forecast_hour)
         forcast_hours.append(forecast_hour)
         #print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
 
@@ -162,7 +159,6 @@ def getandsave(lat,long, time):
     float float string
     """
     if time == "now":
-        print(12)
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return save_hisotric(apiKey, lat, long, time)
 

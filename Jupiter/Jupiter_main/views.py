@@ -31,7 +31,7 @@ def index(request):
     if not request.COOKIES.get('date'):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
-        date = datetime.now().strftime('%Y-%m-%d')
+        date = request.COOKIES.get('date')
     todayRequest = getTodayRequest(lat, long)
     today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
