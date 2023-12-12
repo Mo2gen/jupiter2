@@ -68,45 +68,53 @@
             </div>
         </div>
         <script>
-            const data = JSON.parse('{{ liste|safe }}');
+            var data = JSON.parse('{{ liste|safe }}');
 
-            const temperatureValues = data.map(d => d.Temperature);
-            const minTemperature = d3.min(temperatureValues);
-            const maxTemperature = d3.max(temperatureValues);
+            var temperatureValues = data.map(d => d.Temperature);
+            var minTemperature = d3.min(temperatureValues);
+            var maxTemperature = d3.max(temperatureValues);
 
-            const margin = { top: 40, right: 30, bottom: 30, left: 40 };
-            const width = window.innerWidth - margin.left - margin.right;
-            const height = 200 - margin.top - margin.bottom;
+            var margin = { top: 40, right: 30, bottom: 30, left: 40 };
+            var width = window.innerWidth - margin.left - margin.right;
+            var height = 200 - margin.top - margin.bottom;
 
-            const svg = d3.select("#chart")
+            var svg = d3.select("#chart")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
+            var luft = d3.select("#chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const parseTime = d3.timeParse("%H:%M:%S");
+            var parseTime = d3.timeParse("%H:%M:%S");
 
             data.forEach(d => {
                 d.normaltime = parseTime(d.normaltime);
             });
 
-            const x = d3.scalePoint()
+            var x = d3.scalePoint()
             .domain(data.map(d => d.normaltime))
             .range([0, width]);
 
-            const y = d3.scaleLinear()
+            var yTemp = d3.scaleLinear()
                 .domain([minTemperature, maxTemperature])
                 .range([height, 25]);
 
-            const line = d3.line()
+            var line = d3.line()
                 .x(d => x(d.normaltime))
-                .y(d => y(d.Temperature))
+                .y(d => yTemp(d.Temperature))
                 .curve(d3.curveMonotoneX);
 
+            luft.append()
+
             svg.append("g")
-                .call(g => g.call(d3.axisLeft(y)
+                .call(g => g.call(d3.axisLeft(yTemp)
                     .tickValues(d3.range(minTemperature, maxTemperature + 1)) // Set tick values with an interval of 1
                     .tickFormat(d => `${d}°C`))
                     .selectAll("path, line")
