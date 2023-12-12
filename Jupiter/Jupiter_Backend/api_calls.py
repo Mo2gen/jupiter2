@@ -48,7 +48,7 @@ def save_hisotric(apiKey, lat, long, time):
     historic_date = historic_date.replace(hour=0, minute=0, second=0, microsecond=0)
     historic_date = datetime.datetime.timestamp(historic_date)
 
-    pk = int(time) + int(lat) + int(long)
+    pk = int(time) + int(lat*1000) + int(long*1000)
 
     hisotric_forecast = {
         "pk_forecast_id": pk,
@@ -93,7 +93,7 @@ def save_forecast(forecast):
     print(forecast)
     t = int(time.time())
 
-    pk =  int(t) + int(forecast["latitude"]) +  int(forecast["longitude"])
+    pk =  int(t) + int(forecast["latitude"]*1000) +  int(forecast["longitude"]*1000)
 
     forecast_request = {
         "pk_forecast_id": pk,
@@ -132,7 +132,8 @@ def save_forecast(forecast):
         forcast_hours.append(forecast_hour)
         #print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
 
-    print(requests.post(f"{server}/api/Forecast/", json=forecast_hours))
+
+    print(requests.post(f"{server}/api/Forecast/", json=forcast_hours))
 
     return forecast_request, forcast_hours
 
