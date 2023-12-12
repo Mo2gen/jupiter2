@@ -1,6 +1,7 @@
 # from .models import Forecast_Request
 
 import datetime
+import json
 import time
 import requests
 
@@ -9,8 +10,6 @@ apiKey = "C6KzQwff39MA8kV1"
 
 # Server adress und port
 server = "http://localhost:8000"
-
-# michal hallo
 
 def get_forecast_json(apikey, lat, long, time = time.time()):
     """
@@ -49,7 +48,7 @@ def save_hisotric(apiKey, lat, long, time):
     historic_date = historic_date.replace(hour=0, minute=0, second=0, microsecond=0)
     historic_date = datetime.datetime.timestamp(historic_date)
 
-    pk = int(time) + int(lat) + int(long)
+    pk = int(time) + int(lat*1000) + int(long*1000)
 
     hisotric_forecast = {
         "pk_forecast_id": pk,
@@ -61,7 +60,9 @@ def save_hisotric(apiKey, lat, long, time):
 
     print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
 
-    for hour in get_hisoric_foreast_json(apiKey, lat, long, time)['hourly']['data']:
+    hisotric_hours = []
+
+    for hour in get_hisoric_foreast_json(apiKey,lat,long,time)['hourly']['data']:
         hour_time_unix = hour["time"]
         hour_time_sql = convert_timestamp_normaltime(hour_time_unix)
 
@@ -76,9 +77,10 @@ def save_hisotric(apiKey, lat, long, time):
             "weathersummary": hour["summary"],
             "normaltime": hour_time_sql
         }
-        print(hour_time_sql)
-        print(requests.post(f"{server}/api/Forecast/", json=hisotoric_hour))
 
+        hisotric_hours.append(hisotoric_hour)
+
+    print(requests.post(f"{server}/api/Forecast/", json=hisotric_hours))
 
 
 def save_forecast(forecast):
@@ -87,9 +89,11 @@ def save_forecast(forecast):
     :param forecast: forecast
     :return: transmitted data
     """
+
+    print(forecast)
     t = int(time.time())
 
-    pk =  int(t) + int(forecast["latitude"]) +  int(forecast["longitude"])
+    pk =  int(t) + int(forecast["latitude"]*1000) +  int(forecast["longitude"]*1000)
 
     forecast_request = {
         "pk_forecast_id": pk,
@@ -126,7 +130,10 @@ def save_forecast(forecast):
 
         print(forecast_hour)
         forcast_hours.append(forecast_hour)
-        print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+        #print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
+
+
+    print(requests.post(f"{server}/api/Forecast/", json=forcast_hours))
 
     return forecast_request, forcast_hours
 
@@ -151,8 +158,11 @@ def getandsave(lat,long, time):
 
     example:
     print(getandsave(48.21003,16.363449,"now"))
+    float float int or
+    float float string
     """
     if time == "now":
+        print(12)
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return save_hisotric(apiKey, lat, long, time)
 
@@ -160,7 +170,6 @@ def getandsave(lat,long, time):
 
 #print(save_forecast(get_forecast_json(apiKey, "48.210033", "16.363449")))
 
-#print(getandsave(48.21003,16.363449,1699777708))
+#print(getandsave(48.21003,16.363449,1580336426))
 
-#getandsave(48.210033,16.363449,1699277708)
-
+#getandsave(48.210033,16.363449,"now")
