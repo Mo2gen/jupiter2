@@ -12,12 +12,13 @@ async function startfun() {
             setCookie(lat, long)
         }
     }
-    document.getElementById('change').onclick = async function (event) {
+    document.getElementById('change').onclick = async function () {
         changeCity();
         const cityCoords = await getCityCoords(city);
         lat = cityCoords.lat()
         long = cityCoords.lng()
         setCookie(lat, long)
+        location.reload()
     }
     document.getElementById('date').onchange = function () {
         date = document.getElementById('date').value
@@ -30,9 +31,11 @@ async function startfun() {
             city = await getCityName(lat, long);
             await setCookie(lat, long);
             ({ long, lat, date } = readCookies());
+             document.getElementById('date').value = date
         }
         else {
             ({ long, lat, date } = readCookies());
+            document.getElementById('date').value = date
             city = await getCityName(lat, long);
         }
         document.getElementById('location').setAttribute("placeholder", city);
