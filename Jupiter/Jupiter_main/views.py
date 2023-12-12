@@ -32,17 +32,7 @@ def index(request):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
         date = request.COOKIES.get('date')
-    todayRequest = None
-    for a in ForecastRequest.objects.values():
-        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
-            todayRequest = a
-            break
-    if not todayRequest:
-        getandsave(lat, long, "now")
-        for a in ForecastRequest.objects.values():
-            if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
-                todayRequest = a
-                break
+    todayRequest = getTodayRequest(lat, long)
     today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
     context = {
@@ -63,7 +53,20 @@ def index(request):
     return response
 
 
-def generatelist(date: str, lat: float, long: float) -> dict:
+def getTodayRequest(lat: float, long: float) -> dict:
+    todayRequest = None
+    for a in ForecastRequest.objects.values():
+        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
+            todayRequest = a
+            break
+    if todayRequest:
+        return todayRequest
+    else:
+        getandsave(lat, long, "now")
+        return getTodayRequest(lat, long)
+
+
+def generatelist(date: str, lat: float, long: float) -> list[dict[str, Any]]:
     """
     Generiert eine Dictionary mit Daten für das Generieren des Graphen
     :param date: Datum im Jahr-Monat-Tag Format
@@ -85,4 +88,6 @@ def generatelist(date: str, lat: float, long: float) -> dict:
             ]
     if liste:
         return liste
-    return
+    else:
+        getandsave(lat, long, date)
+        return generatelist(date, lat, long)
