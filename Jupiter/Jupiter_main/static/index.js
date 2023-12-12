@@ -3,17 +3,26 @@ var long = 0;
 var city = ""
 var date = ""
 async function startfun() {
-    document.getElementById('location').onkeydown = function (event) {
+    document.getElementById('location').onkeydown = async function (event) {
         if (event.key === "Enter" || event.keyCode === 13) {
             changeCity();
-            getCityCoords(city);
+            const cityCoords = await getCityCoords(city);
+            lat = cityCoords.lat()
+            long = cityCoords.lng()
+            setCookie(lat, long)
         }
     }
     try {
-        await getCurrentCoords();
-        city = await getCityName(lat, long);
-        await setCookie(lat, long);  // Ensure this is called after reading cookies
-        lat, long, date = readCookies();
+        if (document.cookie.split('; ')[2] == undefined) {
+            await getCurrentCoords();
+            city = await getCityName(lat, long);
+            await setCookie(lat, long);
+            ({ long, lat, date } = readCookies());
+        }
+        else {
+            ({ long, lat, date } = readCookies());
+            city = await getCityName(lat, long);
+        }
         document.getElementById('location').setAttribute("placeholder", city);
     } catch (error) {
         console.error(error);
@@ -48,7 +57,8 @@ function getCityCoords(cityName) {
       if (status === "OK") {
         if (results[0]) {
           var location = results[0].geometry.location;
-          resolve();
+          // Pass the coordinates to the resolve function
+          resolve(location);
         } else {
           reject("No results found");
         }
@@ -121,11 +131,9 @@ function setCookie(lat, long) {
     document.cookie = "lat=" + lat;
     document.cookie = "long=" + long;
     if(document.getElementById('date').value !== ''){
-        console.log('AAAAAAAAA')
         document.cookie = "date=" + document.getElementById('date').value
     }
     else{
-        console.log('BBBBBBBBBBBBBB')
         document.cookie = "date=" + new Date().toISOString().split('T')[0];
     }
 }
