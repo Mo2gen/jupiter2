@@ -12,9 +12,9 @@ async function startfun() {
             setCookie(lat, long)
         }
     }
-    document.getElementById('date').onchange =function () {
+    document.getElementById('date').onchange = function () {
         date = document.getElementById('date').value
-        setCookie(lat, long)
+        setCookie(lat, long, date)
         console.log('datum geändert!' + date)
     };
     try {
@@ -132,13 +132,18 @@ function readCookies() {
     };
 }
 
-function setCookie(lat, long) {
+function setCookie(lat, long, date="not set") {
     document.cookie = "lat=" + lat;
     document.cookie = "long=" + long;
-    if(document.getElementById('date').value !== ''){
+    if(date === "not set"){
+        if(document.getElementById('date').value !== ''){
         document.cookie = "date=" + document.getElementById('date').value
+        }
+        else{
+            document.cookie = "date=" + new Date().toISOString().split('T')[0];
+        }
     }
-    else{
-        document.cookie = "date=" + new Date().toISOString().split('T')[0];
+    else {
+        document.cookie = "date=" + date
     }
 }
