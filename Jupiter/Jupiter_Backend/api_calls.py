@@ -61,7 +61,7 @@ def save_hisotric(apiKey, lat, long, time):
 
     print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
 
-    for hour in get_hisoric_foreast_json(apiKey,lat,long,time)['hourly']['data']:
+    for hour in get_hisoric_foreast_json(apiKey, lat, long, time)['hourly']['data']:
         hour_time_unix = hour["time"]
         hour_time_sql = convert_timestamp_normaltime(hour_time_unix)
 
@@ -87,8 +87,6 @@ def save_forecast(forecast):
     :param forecast: forecast
     :return: transmitted data
     """
-
-    print(forecast)
     t = int(time.time())
 
     pk =  int(t) + int(forecast["latitude"]) +  int(forecast["longitude"])
@@ -155,7 +153,6 @@ def getandsave(lat,long, time):
     print(getandsave(48.21003,16.363449,"now"))
     """
     if time == "now":
-        print(12)
         return save_forecast(get_forecast_json(apiKey, lat, long))
     return save_hisotric(apiKey, lat, long, time)
 

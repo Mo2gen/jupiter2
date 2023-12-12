@@ -47,7 +47,7 @@ def index(request):
         "date": datetime.now().strftime('%A %H:%M'),
         'liste': dict
     }
-    temp = generatelist(date, lat, long)
+    temp = generatelist(lat, long, date)
     context['liste'] = json.dumps(temp)
     response = render(request, 'test.html', context)
     return response
@@ -66,7 +66,7 @@ def getTodayRequest(lat: float, long: float) -> dict:
         return getTodayRequest(lat, long)
 
 
-def generatelist(date: str, lat: float, long: float) -> list[dict[str, Any]]:
+def generatelist(lat: float, long: float, date: str) -> list[dict[str, any]]:
     """
     Generiert eine Dictionary mit Daten für das Generieren des Graphen
     :param date: Datum im Jahr-Monat-Tag Format
@@ -76,7 +76,7 @@ def generatelist(date: str, lat: float, long: float) -> list[dict[str, Any]]:
     """
     liste = None
     for a in ForecastRequest.objects.values():
-        if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
+        if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == date and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
             liste = [
                 {
                     'timestamphour': b['timestamphour'],
@@ -89,5 +89,5 @@ def generatelist(date: str, lat: float, long: float) -> list[dict[str, Any]]:
     if liste:
         return liste
     else:
-        getandsave(lat, long, date)
-        return generatelist(date, lat, long)
+        getandsave(lat, long, int(datetime.strptime(date, "%Y-%m-%d").timestamp()))
+        return generatelist(lat, long, date)
