@@ -15,8 +15,8 @@
         <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     </head>
     <body onload="startfun()">
-        <div class="container-fluid m-0 p-0 bg vh-100">
-            <div class="row">
+        <div class="container-fluid m-0 p-0 bg">
+            <div class="ms-2 me-2 mt-2 row">
                 <div class="col bg-jupiter rounded mb-2">
                     <div class="col">
                         <div class="flex-row ms-2 mt-2">
@@ -59,55 +59,109 @@
                     </table>
                 </div>
             </div>
-            <div class="row mw-100 ms-0 ps-0 bg-jupiter">
+            <div class=" ms-2 me-2 row rounded ps-1 bg-jupiter mb-2">
                 <div><input id="date" type="date"></div>
-                <div class="col p-0" id="chart" style="max-width: 100vw"></div>
+                <div class="col p-0" id="chart"></div>
             </div>
-            <div class="row mw-100 ms-0 ps-0 bg-jupiter">
-                <div class="col p-0" id="chart_luft" style="max-width: 100vw"></div>
+            <div class=" ms-2 me-2 row rounded ps-1 bg-jupiter">
+                <div class="col p-0" id="chart_luft"></div>
             </div>
         </div>
         <script>
-            const data = JSON.parse('{{ liste|safe }}');
+            var data = JSON.parse('{{ liste|safe }}');
 
-            const temperatureValues = data.map(d => d.Temperature);
-            const minTemperature = d3.min(temperatureValues);
-            const maxTemperature = d3.max(temperatureValues);
+            var temperatureValues = data.map(d => d.Temperature);
+            var luftValues = data.map(d => d.humidity);
+            var minTemperature = d3.min(temperatureValues);
+            var maxTemperature = d3.max(temperatureValues);
+            var minLuft = d3.min(luftValues);
+            var maxLuft = d3.max(luftValues);
 
-            const margin = { top: 40, right: 30, bottom: 30, left: 40 };
-            const width = window.innerWidth - margin.left - margin.right;
-            const height = 200 - margin.top - margin.bottom;
+            var margin = { top: 50, right: 0, bottom: 30, left: 40 };
+            var luftmargin = { top: 0, right: 0, bottom: 30, left: 40 };
+            var width = window.innerWidth - margin.left - margin.right;
+            var luftwidth = window.innerWidth - luftmargin.left - luftmargin.right;
+            var height = 250 - margin.top - margin.bottom;
 
-            const svg = d3.select("#chart")
+            var svg = d3.select("#chart")
                 .append("svg")
-                .attr("width", width + margin.left + margin.right)
+                .attr("width", width)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
+            var luft = d3.select("#chart_luft")
+                .append("svg")
+                .attr("width", luftwidth)
+                .attr("height", height + luftmargin.top + luftmargin.bottom)
+                .append("g")
+                .attr("transform", `translate(${luftmargin.left},${luftmargin.top})`);
 
-            const parseTime = d3.timeParse("%H:%M:%S");
+            var parseTime = d3.timeParse("%H:%M:%S");
 
             data.forEach(d => {
                 d.normaltime = parseTime(d.normaltime);
             });
 
-            const x = d3.scalePoint()
+            var x = d3.scalePoint()
             .domain(data.map(d => d.normaltime))
             .range([0, width]);
 
-            const y = d3.scaleLinear()
+            var yTemp = d3.scaleLinear()
                 .domain([minTemperature, maxTemperature])
                 .range([height, 25]);
 
-            const line = d3.line()
+            var yLuft = d3.scaleLinear()
+                .domain([minLuft, maxLuft])
+                .range([height, 25]);
+
+            var templine = d3.line()
                 .x(d => x(d.normaltime))
-                .y(d => y(d.Temperature))
+                .y(d => yTemp(d.Temperature))
                 .curve(d3.curveMonotoneX);
 
+            var luftline = d3.line()
+                .x(d => x(d.normaltime))
+                .y(d => yLuft(d.humidity))
+                .curve(d3.curveMonotoneX)
+
+            luft.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(g => g.call(d3.axisBottom(x)
+                    .tickFormat(d3.timeFormat("%H:%M")))
+                    .selectAll("path, line")
+                    .attr("stroke-opacity", 0.1))
+                .call(g => g.selectAll(".tick line").clone()
+                    .attr("y2", -height+25)
+                    .attr("stroke-opacity", 0.1));
+
+            luft.append("g")
+                .attr("transform", `translate(0,0)`)
+                .call(g => g.call(d3.axisLeft(yLuft)
+                    .tickValues(d3.range(minLuft, maxLuft + 0.01, 0.02))
+                    .tickFormat(d => `${Math.round(d * 100)}%`))
+                    .selectAll("path, line")
+                    .attr("stroke-opacity", 0.1))
+                .call(g => g.selectAll(".tick line").clone()
+                    .attr("x2", width)
+                    .attr("stroke-opacity", 0.1))
+                .call(g => g.append("text")
+                    .attr("x", -35)
+                    .attr("y", -10)
+                    .attr("fill", "currentColor")
+                    .attr("text-anchor", "start")
+                    .attr("font-style", "italic"));
+
+            luft.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .attr("d", luftline);
+
             svg.append("g")
-                .call(g => g.call(d3.axisLeft(y)
-                    .tickValues(d3.range(minTemperature, maxTemperature + 1)) // Set tick values with an interval of 1
+                .call(g => g.call(d3.axisLeft(yTemp)
+                    .tickValues(d3.range(minTemperature, maxTemperature + 1))
                     .tickFormat(d => `${d}°C`))
                     .selectAll("path, line")
                     .attr("stroke-opacity", 0.1))
@@ -128,7 +182,7 @@
                     .selectAll("path, line")
                     .attr("stroke-opacity", 0.1))
                 .call(g => g.selectAll(".tick line").clone()
-                    .attr("y2", -height)
+                    .attr("y2", -height+25)
                     .attr("stroke-opacity", 0.1));
 
             svg.selectAll(".label")
@@ -173,7 +227,7 @@
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", 2)
-                .attr("d", line);
+                .attr("d", templine);
         </script>
     </body>
 </html>

@@ -49,7 +49,7 @@ def index(request):
     }
     temp = generatelist(lat, long, date)
     context['liste'] = json.dumps(temp)
-    response = render(request, 'test.html', context)
+    response = render(request, 'index.html', context)
     return response
 
 
