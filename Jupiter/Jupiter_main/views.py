@@ -31,7 +31,7 @@ def index(request):
     if not request.COOKIES.get('date'):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
-        date = request.COOKIES.get('date')
+        date = datetime.now().strftime('%Y-%m-%d')
     todayRequest = getTodayRequest(lat, long)
     today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
@@ -49,7 +49,7 @@ def index(request):
     }
     temp = generatelist(lat, long, date)
     context['liste'] = json.dumps(temp)
-    response = render(request, 'index.html', context)
+    response = render(request, 'test.html', context)
     return response
 
 
@@ -80,9 +80,11 @@ def generatelist(lat: float, long: float, date: str) -> list[dict[str, any]]:
             liste = [
                 {
                     'timestamphour': b['timestamphour'],
+                    'humidity': b['humidity'],
                     'normaltime': b['normaltime'].strftime('%H:%M:%S'),
                     'Temperature': b['temperature_cur'],
-                    'weather': icons[b['weathersummary'].lower()]
+                    'weather': icons[b['weathersummary'].lower()
+                    ]
                 }
                 for b in ForecastHour.objects.values() if b['fk_request_id'] == a['pk_forecast_id']
             ]
