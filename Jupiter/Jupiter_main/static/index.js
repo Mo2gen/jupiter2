@@ -12,6 +12,13 @@ async function startfun() {
             setCookie(lat, long)
         }
     }
+    document.getElementById('change').onclick = async function (event) {
+        changeCity();
+        const cityCoords = await getCityCoords(city);
+        lat = cityCoords.lat()
+        long = cityCoords.lng()
+        setCookie(lat, long)
+    }
     document.getElementById('date').onchange = function () {
         date = document.getElementById('date').value
         setCookie(lat, long, date)
