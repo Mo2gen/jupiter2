@@ -39,7 +39,7 @@ def index(request):
     context = {
         "currentTemp": now['temperature_cur'],
         "wind": round(now['windspeed'] * 3.6, 1),
-        "humidity": now['humidity'] * 100,
+        "humidity": round(now['humidity'] * 100),
         "uv": now['uvindex'],
         "pressure": now['airpressure'],
         "min": min([a['temperature_cur'] for a in today]),
@@ -111,7 +111,7 @@ def getUpdate(request):
     context = {
         "currentTemp": now['temperature_cur'],
         "wind": round(now['windspeed'] * 3.6, 1),
-        "humidity": now['humidity'] * 100,
+        "humidity": round(now['humidity'] * 100),
         "uv": now['uvindex'],
         "pressure": now['airpressure'],
         "min": min([a['temperature_cur'] for a in today]),

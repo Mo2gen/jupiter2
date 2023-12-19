@@ -70,6 +70,10 @@
             </div>
         </div>
         <script>
+            const a = document.createElement('span');
+            a.innerText = "jsf";
+            a.id='temp';
+            document.getElementById('chart').appendChild(a);
             var data = JSON.parse('{{ liste|safe }}');
 
             var temperatureValues = data.map(d => d.Temperature);
@@ -81,10 +85,9 @@
 
             var margin = { top: 50, right: 80, bottom: 30, left: 40 };
             var luftmargin = { top: 0, right: 80, bottom: 30, left: 40 };
-            var width = window.innerWidth;
-            var luftwidth = window.innerWidth;
+            var width = document.getElementById("chart").offsetWidth;
+            var luftwidth = document.getElementById("chart").offsetWidth;
             var height = 250 - margin.top - margin.bottom;
-
             var svg = d3.select("#chart")
                 .append("svg")
                 .attr("width", width)
@@ -321,6 +324,7 @@
                 .attr("stroke", "black")
                 .attr("stroke-width", 2)
                 .attr("d", templine);
+            document.getElementById('temp').remove();
         </script>
     </body>
 </html>
