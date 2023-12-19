@@ -79,10 +79,10 @@
             var minLuft = d3.min(luftValues);
             var maxLuft = d3.max(luftValues);
 
-            var margin = { top: 50, right: 0, bottom: 30, left: 40 };
-            var luftmargin = { top: 0, right: 0, bottom: 30, left: 40 };
-            var width = window.innerWidth - margin.left - margin.right;
-            var luftwidth = window.innerWidth - luftmargin.left - luftmargin.right;
+            var margin = { top: 50, right: 80, bottom: 30, left: 40 };
+            var luftmargin = { top: 0, right: 80, bottom: 30, left: 40 };
+            var width = window.innerWidth;
+            var luftwidth = window.innerWidth;
             var height = 250 - margin.top - margin.bottom;
 
             var svg = d3.select("#chart")
@@ -107,7 +107,7 @@
 
             var x = d3.scalePoint()
             .domain(data.map(d => d.normaltime))
-            .range([0, width]);
+            .range([0, width - margin.right]);
 
             var yTemp = d3.scaleLinear()
                 .domain([minTemperature, maxTemperature])
@@ -145,7 +145,7 @@
                     .selectAll("path, line")
                     .attr("stroke-opacity", 0.1))
                 .call(g => g.selectAll(".tick line").clone()
-                    .attr("x2", width)
+                    .attr("x2", luftwidth - luftmargin.right)
                     .attr("stroke-opacity", 0.1))
                 .call(g => g.append("text")
                     .attr("x", -35)
@@ -209,7 +209,7 @@
                     .selectAll("path, line")
                     .attr("stroke-opacity", 0.1))
                 .call(g => g.selectAll(".tick line").clone()
-                    .attr("x2", width)
+                    .attr("x2", width - margin.right)
                     .attr("stroke-opacity", 0.1))
                 .call(g => g.append("text")
                     .attr("x", -35)
