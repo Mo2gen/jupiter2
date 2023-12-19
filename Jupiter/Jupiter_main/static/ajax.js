@@ -1,6 +1,6 @@
 setInterval(function() {
     updateData();
-}, 10 * 60 * 1000);
+}, 600 * 1000);
 
 function updateData() {
     $.ajax({
@@ -16,7 +16,7 @@ function updateData() {
             document.getElementById('uv').innerText = data.uv;
             document.getElementById('pressure').innerText = data.pressure + 'mBar';
             document.getElementById('minmax').innerText = data.min + '/' + data.max + ' °C'
-
+            console.log("Updated!")
         },
         error: function(xhr, status, error) {
             console.error("AJAX Request Crashed! Please sent the error to the JUpiter team!")
