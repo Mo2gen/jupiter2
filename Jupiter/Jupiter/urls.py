@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('Jupiter_main.urls')),
     path('api/',include('Jupiter_Backend.urls'))
 ]

@@ -11,8 +11,10 @@
         <link rel="stylesheet" href="{% static 'css/weather-icons.min.css' %}">
         <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
         <script src="{% static 'index.js' %}"></script>
+        <script src="{% static 'ajax.js' %}"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApJ5QaTevQDcKAeHovgFJOeOurAPXGZxs&libraries=places"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     </head>
     <body onload="startfun()">
         <div class="container-fluid m-0 p-0 bg">
@@ -25,10 +27,10 @@
                                 <button class="rounded-circle" id="change" type="submit" onclick=changeCity()><img src="{% static 'lupe.png' %}" width="15px" height="15px"></button>
                             </div>
                             <div class="row">
-                                <div class="col-2"> <h1>{{ currentTemp }}°C</h1></div>
-                                <div class="col weather" style="font-size: 35px">{{ weather }}</div>
+                                <div class="col-2"> <h1 id="currentTemp">{{ currentTemp }}°C</h1></div>
+                                <div id="weather" class="col weather">{{ weather }}</div>
                             </div>
-                            <div> {{ date }}</div>
+                            <div id="now"> {{ now }}</div>
                         </div>
                     </div>
                 </div>
@@ -37,23 +39,23 @@
                         <tbody>
                             <tr>
                                 <td>Luftfeuchtigkeit</td>
-                                <td> {{ humidity }}%</td>
+                                <td id="humidity"> {{ humidity }}%</td>
                             </tr>
                             <tr>
                                 <td>Wind</td>
-                                <td> {{ wind }}km/h</td>
+                                <td id="wind"> {{ wind }}km/h</td>
                             </tr>
                             <tr>
                                 <td>UV-Index</td>
-                                <td> {{ uv }}</td>
+                                <td id="uv"> {{ uv }}</td>
                             </tr>
                             <tr>
                                 <td>Luftdruck</td>
-                                <td> {{ pressure }} mBar</td>
+                                <td id="pressure"> {{ pressure }} mBar</td>
                             </tr>
                             <tr>
                                 <td>Min/Max °C</td>
-                                <td> {{ min }}/{{ max }} °C</td>
+                                <td id="minmax"> {{ min }}/{{ max }} °C</td>
                             </tr>
                         </tbody>
                     </table>

@@ -21,9 +21,13 @@ async function startfun() {
         location.reload()
     }
     document.getElementById('date').onchange = function () {
-        date = document.getElementById('date').value
-        setCookie(lat, long, date)
-        console.log('datum geändert!' + date)
+        if (parseInt(document.getElementById('date').value.split('-')[0]) < 1970 && parseInt(document.getElementById('date').value.split('-')[0]) > 1000){
+            alert('Date too far back, please stick to dates before 1.1.1970')
+        }
+        else{
+            date = document.getElementById('date').value
+            setCookie(lat, long, date)
+        }
     };
     try {
         if (document.cookie.split('; ')[2] == undefined) {

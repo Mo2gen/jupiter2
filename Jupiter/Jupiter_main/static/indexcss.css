@@ -8,6 +8,7 @@ html,body {
 
 .weather {
     font-family: 'weathericons', serif;
+    font-size: 35px;
 }
 
 .bg-jupiter{

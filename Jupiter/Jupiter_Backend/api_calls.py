@@ -8,6 +8,7 @@ import requests
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
 
+
 # Server adress und port
 server = "http://localhost:8000"
 
@@ -37,6 +38,11 @@ def save_hisotric(apiKey, lat, long, time):
             -> hourly Forecast from 00:00 of date
     save to db afterwards
 
+    if no data is availabe for given time and date -> save current data in vienna instead
+        -> manuell calculation of timestamp
+
+    if data < 1970 ->  crash
+
     :param apiKey: Pirateweather API key
     :param lat: latitude
     :param long: longitude
@@ -48,7 +54,7 @@ def save_hisotric(apiKey, lat, long, time):
     historic_date = historic_date.replace(hour=0, minute=0, second=0, microsecond=0)
     historic_date = datetime.datetime.timestamp(historic_date)
 
-    pk = int(time) + int(lat*1000) + int(long*1000)
+    pk = int(time) + int(lat*100000) + int(long*100000)
 
     hisotric_forecast = {
         "pk_forecast_id": pk,
@@ -58,17 +64,31 @@ def save_hisotric(apiKey, lat, long, time):
         "longitude": long
     }
 
-    print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
+    requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast)
 
     hisotric_hours = []
 
-    for hour in get_hisoric_foreast_json(apiKey,lat,long,time)['hourly']['data']:
-        hour_time_unix = hour["time"]
+    try:
+        hisotric_forecast_data = get_hisoric_foreast_json(apiKey,lat,long,time)['hourly']['data']
+    except:
+        print("ERROR, no data available for this time and place -> using current forecast for vienna instead")
+        hisotric_forecast_data = get_forecast_json(apiKey,lat,long)['hourly']['data']
+
+
+    h = 0
+
+    for hour in hisotric_forecast_data:
+
+        if h > 23:
+            break
+
+        hour_time_unix = historic_date + h*3600
+        #hour_time_unix = hour["time"]
         hour_time_sql = convert_timestamp_normaltime(hour_time_unix)
 
         hisotoric_hour = {
             "fk_request": int(pk),
-            "timestamphour": int(hour["time"]),
+            "timestamphour": hour_time_unix,
             "temperature_cur": int(hour["temperature"]),
             "humidity":  12,
             "windspeed": float(hour["windSpeed"]),
@@ -80,7 +100,9 @@ def save_hisotric(apiKey, lat, long, time):
 
         hisotric_hours.append(hisotoric_hour)
 
-    print(requests.post(f"{server}/api/Forecast/", json=hisotric_hours))
+        h+=1
+
+    requests.post(f"{server}/api/Forecast/", json=hisotric_hours)
 
 
 def save_forecast(forecast):
@@ -102,7 +124,7 @@ def save_forecast(forecast):
         "longitude": float(forecast["longitude"])
     }
 
-    print(requests.post(f"{server}/api/Forecast_Request/", json=forecast_request))
+    requests.post(f"{server}/api/Forecast_Request/", json=forecast_request)
 
     forcast_hours = []
 
@@ -130,9 +152,9 @@ def save_forecast(forecast):
         #print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
 
 
-    print(requests.post(f"{server}/api/Forecast/", json=forcast_hours))
+    requests.post(f"{server}/api/Forecast/", json=forcast_hours)
 
-    return forecast_request, forcast_hours
+    #return forecast_request, forcast_hours
 
 
 def convert_timestamp_normaltime(t):
