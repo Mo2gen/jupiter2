@@ -112,7 +112,7 @@
                 .range([height, 25]);
 
             var yLuft = d3.scaleLinear()
-                .domain([minLuft, maxLuft])
+                .domain([0, 1])
                 .range([height, 25]);
 
             var templine = d3.line()
@@ -138,7 +138,7 @@
             luft.append("g")
                 .attr("transform", `translate(0,0)`)
                 .call(g => g.call(d3.axisLeft(yLuft)
-                    .tickValues(d3.range(minLuft, maxLuft + 0.01, 0.02))
+                    .tickValues(d3.range(0, 1.01, 0.25))
                     .tickFormat(d => `${Math.round(d * 100)}%`))
                     .selectAll("path, line")
                     .attr("stroke-opacity", 0.1))
@@ -151,6 +151,47 @@
                     .attr("fill", "currentColor")
                     .attr("text-anchor", "start")
                     .attr("font-style", "italic"));
+
+            luft.append("rect")
+                .attr("width", luftwidth)
+                .attr("height", height)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .on("mousemove", updateLuftTooltipAndDot)
+                .on("mouseout", hideLuftTooltipAndDot);
+
+            var luftDot = luft.append("circle")
+                .attr("class", "dot")
+                .attr("r", 5)
+                .attr("fill", "black")
+                .style("opacity", 0);
+
+            function updateLuftTooltipAndDot(event) {
+                var mouseX = d3.pointer(event)[0];
+
+                var index = Math.round((mouseX / luftwidth) * (data.length - 1));
+                index = Math.max(0, Math.min(index, data.length - 1));
+
+                var dataPoint = data[index];
+
+                luftDot.attr("cx", x(dataPoint.normaltime))
+                       .attr("cy", yLuft(dataPoint.humidity))
+                       .style("opacity", 1);
+
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 0.9);
+                tooltip.html(`${Math.round(dataPoint.humidity * 100)}%`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            }
+
+            function hideLuftTooltipAndDot() {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                luftDot.style("opacity", 0);
+            }
 
             luft.append("path")
                 .datum(data)
@@ -221,6 +262,56 @@
                 .style("font-size", "18px")
                 .style("text-anchor", "middle")
                 .style("alignment-baseline", "bottom");
+
+            var tooltip = d3.select("#chart").append("div")
+                .attr("id", "tooltip")
+                .style("position", "absolute")
+                .style("opacity", 0)
+                .style("pointer-events", "none")
+                .style("background-color", "white")
+                .style("padding", "5px")
+                .style("border", "1px solid black");
+
+            svg.append("rect")
+                .attr("width", width)
+                .attr("height", height)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .on("mousemove", updateTooltipAndDot)
+                .on("mouseout", hideTooltipAndDot);
+
+            var dot = svg.append("circle")
+                .attr("class", "dot")
+                .attr("r", 5)
+                .attr("fill", "black")
+                .style("opacity", 0);
+
+            function updateTooltipAndDot(event) {
+                var mouseX = d3.pointer(event)[0];
+
+                var index = Math.round((mouseX / width) * (data.length - 1));
+                index = Math.max(0, Math.min(index, data.length - 1));
+
+                var dataPoint = data[index];
+
+                dot.attr("cx", x(dataPoint.normaltime))
+                   .attr("cy", yTemp(dataPoint.Temperature))
+                   .style("opacity", 1);
+
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 0.9);
+                tooltip.html(`${dataPoint.Temperature}°C`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+                }
+
+            function hideTooltipAndDot() {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                dot.style("opacity", 0);
+            }
 
             svg.append("path")
                 .datum(data)
