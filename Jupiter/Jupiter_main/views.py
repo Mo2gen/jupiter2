@@ -2,6 +2,7 @@ from django.shortcuts import render
 from datetime import datetime
 from Jupiter_Backend.models import ForecastHour, ForecastRequest
 from Jupiter_Backend.api_calls import getandsave as getandsave
+from django.http import JsonResponse
 import json
 import math
 
@@ -44,7 +45,7 @@ def index(request):
         "min": min([a['temperature_cur'] for a in today]),
         "max": max([a['temperature_cur'] for a in today]),
         "weather": icons[now['weathersummary'].lower()],
-        "date": datetime.now().strftime('%A %H:%M'),
+        "now": datetime.now().strftime('%A %H:%M'),
         'liste': dict
     }
     temp = generatelist(lat, long, date)
@@ -93,3 +94,29 @@ def generatelist(lat: float, long: float, date: str) -> list[dict[str, any]]:
     else:
         getandsave(lat, long, int(datetime.strptime(date, "%Y-%m-%d").timestamp()))
         return generatelist(lat, long, date)
+
+
+def getUpdate(request):
+    if not request.COOKIES.get('lat'):
+        lat = 48.1940447
+    else:
+        lat = float(request.COOKIES.get('lat'))
+    if not request.COOKIES.get('long'):
+        long = 16.4133434
+    else:
+        long = float(request.COOKIES.get('long'))
+    todayRequest = getTodayRequest(lat, long)
+    today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
+    now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
+    context = {
+        "currentTemp": now['temperature_cur'],
+        "wind": round(now['windspeed'] * 3.6, 1),
+        "humidity": now['humidity'] * 100,
+        "uv": now['uvindex'],
+        "pressure": now['airpressure'],
+        "min": min([a['temperature_cur'] for a in today]),
+        "max": max([a['temperature_cur'] for a in today]),
+        "weather": icons[now['weathersummary'].lower()],
+        "now": datetime.now().strftime('%A %H:%M')
+    }
+    return JsonResponse(context)
