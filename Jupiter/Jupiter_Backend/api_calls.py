@@ -8,6 +8,7 @@ import requests
 # Wichtig! Ohne diesen wird kein Zugirff erlaubt
 apiKey = "C6KzQwff39MA8kV1"
 
+
 # Server adress und port
 server = "http://localhost:8000"
 
