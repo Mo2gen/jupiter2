@@ -1,6 +1,5 @@
 setInterval(function() {
     updateData();
-    console.log('Updating!')
 }, 10 * 60 * 1000);
 
 function updateData() {
@@ -9,7 +8,6 @@ function updateData() {
         type: "GET",
         dataType: "json",
         success: function(data) {
-            console.log(data);
             document.getElementById('now').innerText = data.now;
             document.getElementById('weather').innerText = data.weather;
             document.getElementById('currentTemp').innerText = data.currentTemp + "°C";
@@ -21,6 +19,7 @@ function updateData() {
 
         },
         error: function(xhr, status, error) {
+            console.error("AJAX Request Crashed! Please sent the error to the JUpiter team!")
             console.error(xhr.responseText);
         }
     });
