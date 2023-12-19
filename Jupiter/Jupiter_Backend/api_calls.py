@@ -64,7 +64,7 @@ def save_hisotric(apiKey, lat, long, time):
         "longitude": long
     }
 
-    print(requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast))
+    requests.post(f"{server}/api/Forecast_Request/", json=hisotric_forecast)
 
     hisotric_hours = []
 
@@ -97,13 +97,12 @@ def save_hisotric(apiKey, lat, long, time):
             "weathersummary": hour["summary"],
             "normaltime": hour_time_sql
         }
-        print(hour_time_sql,hour_time_unix)
 
         hisotric_hours.append(hisotoric_hour)
 
         h+=1
 
-    print(requests.post(f"{server}/api/Forecast/", json=hisotric_hours))
+        requests.post(f"{server}/api/Forecast/", json=hisotric_hours)
 
 
 def save_forecast(forecast):
@@ -125,7 +124,7 @@ def save_forecast(forecast):
         "longitude": float(forecast["longitude"])
     }
 
-    print(requests.post(f"{server}/api/Forecast_Request/", json=forecast_request))
+    requests.post(f"{server}/api/Forecast_Request/", json=forecast_request)
 
     forcast_hours = []
 
@@ -153,8 +152,7 @@ def save_forecast(forecast):
         #print(requests.post(f"{server}/api/Forecast/", json=forecast_hour))
 
 
-    print(requests.post(f"{server}/api/Forecast/", json=forcast_hours))
-
+    requests.post(f"{server}/api/Forecast/", json=forcast_hours)
 
     #return forecast_request, forcast_hours
 
