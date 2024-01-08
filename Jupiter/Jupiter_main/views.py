@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from datetime import datetime
+from datetime import datetime, timedelta
 from Jupiter_Backend.models import ForecastHour, ForecastRequest
 from Jupiter_Backend.api_calls import getandsave as getandsave
 from django.http import JsonResponse
@@ -32,7 +32,10 @@ def index(request):
     if not request.COOKIES.get('date'):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
-        date = request.COOKIES.get('date')
+        if (datetime.now() + timedelta(days=1)) < datetime.strptime(request.COOKIES.get('date'), '%Y-%m-%d'):
+            date = datetime.now().strftime('%Y-%m-%d')
+        else:
+            date = request.COOKIES.get('date')
     todayRequest = getTodayRequest(lat, long)
     today = [a for a in ForecastHour.objects.values() if a['fk_request_id'] == todayRequest['pk_forecast_id']]
     now = [a for a in today if a['normaltime'].strftime("%H") == datetime.now().strftime("%H")][0]
@@ -57,7 +60,9 @@ def index(request):
 def getTodayRequest(lat: float, long: float) -> dict:
     todayRequest = None
     for a in ForecastRequest.objects.values():
-        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime("%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
+        if datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == datetime.now().date().strftime(
+                "%Y-%m-%d") and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'],
+                                                                                                 abs_tol=0.009):
             todayRequest = a
             break
     if todayRequest:
@@ -77,7 +82,8 @@ def generatelist(lat: float, long: float, date: str) -> list[dict[str, any]]:
     """
     liste = None
     for a in ForecastRequest.objects.values():
-        if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == date and math.isclose(lat, a['latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
+        if date == datetime.fromtimestamp(a['pk_timestamp']).strftime("%Y-%m-%d") == date and math.isclose(lat, a[
+            'latitude'], abs_tol=0.009) and math.isclose(long, a['longitude'], abs_tol=0.009):
             liste = [
                 {
                     'timestamphour': b['timestamphour'],
