@@ -21,6 +21,7 @@ icons = {
 
 
 def index(request):
+    has_data: bool = True
     if not request.COOKIES.get('lat'):
         lat = 48.1940447
     else:
@@ -32,8 +33,9 @@ def index(request):
     if not request.COOKIES.get('date'):
         date = datetime.now().strftime('%Y-%m-%d')
     else:
-        if (datetime.now() + timedelta(days=1)) < datetime.strptime(request.COOKIES.get('date'), '%Y-%m-%d'):
+        if (datetime.today() + timedelta(days=2)) < datetime.strptime(request.COOKIES.get('date'), '%Y-%m-%d'):
             date = datetime.now().strftime('%Y-%m-%d')
+            has_data = False
         else:
             date = request.COOKIES.get('date')
     todayRequest = getTodayRequest(lat, long)
@@ -49,11 +51,15 @@ def index(request):
         "max": max([a['temperature_cur'] for a in today]),
         "weather": icons[now['weathersummary'].lower()],
         "now": datetime.now().strftime('%A %H:%M'),
-        'liste': dict
+        'liste': dict,
+        'has_data': has_data
     }
+    if not has_data:
+        print("NO data!")
     temp = generatelist(lat, long, date)
     context['liste'] = json.dumps(temp)
     response = render(request, 'index.html', context)
+    response.set_cookie('date', date)
     return response
 
 

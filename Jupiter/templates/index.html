@@ -326,5 +326,10 @@
                 .attr("d", templine);
             document.getElementById('temp').remove();
         </script>
+        <script>
+            {% if not has_data %}
+                alert("Keine Daten für dieses Datum gefunden");
+            {% endif %}
+        </script>
     </body>
 </html>
